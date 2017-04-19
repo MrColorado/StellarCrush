@@ -36,25 +36,36 @@ public class StellarCrush {
     // Main game class
 
     // CONSTANTS TUNED FOR GAMEPLAY EXPERIENCE
-    static final int GAME_DELAY_TIME = 5000; // in-game time units between frame updates
-    static final int TIME_PER_MS = 1000; // how long in-game time corresponds to a real-time millisecond
-    static final double G = 6.67e-11; // gravitational constant
-    static final double softE = 0.001; // softening factor to avoid division by zero calculating force for co-located objects
-    static double scale = 5e10; // plotted universe size
+  static final int GAME_DELAY_TIME = 5000; // in-game time units between frame updates
+  static final int TIME_PER_MS = 1000; // how long in-game time corresponds to a real-time millisecond
+  static final double G = 6.67e-11; // gravitational constant
+  static final double softE = 0.001; // softening factor to avoid division by zero calculating force for co-located objects
+  static double scale = 5e10; // plotted universe size
     
-    public static void main(String[] args) {
-      StdDraw.setXscale(0, 1);
-      StdDraw.setYscale(0, 1);
-      StdDraw.clear();
-      StdDraw.picture(0, 0, "background.jpg", 2, 2);
-      boolean ifinit = false;
-      while (!ifinit) {
-        ifinit = StdDraw.isKeyPressed(KeyEvent.VK_M);
-        System.out.println(ifinit);
-      }
-      
-      
-      return;
+  public static boolean game() {
+    StdDraw.picture(0, 0, "res/background.png", 2, 2);
+    return true;
+  }
+  
+  public static void main(String[] args) {
+    StdDraw.setXscale(0, 1);
+    StdDraw.setYscale(0, 1);
+    StdDraw.clear();
+    StdDraw.picture(0, 0, "res/background.png", 2, 2);
+    StdDraw.setPenColor(StdDraw.RED);
+    StdDraw.text(0.5, 0.75, "STELLAR CRUSH");
+    StdDraw.text(0.5, 0.65, "Press any key to start");
+    StdDraw.text(0.5, 0.45, "Arrows to rotate left or right, accelerate or decelerate");
+    StdDraw.text(0.5, 0.35, "You are borg. Assimilate all who stand against you !");
+    StdDraw.text(0.5, 0.25, "Quit (m)");
+    
+    boolean b = true;
+    while (b) {
+     if (StdDraw.isKeyPressed(KeyEvent.VK_M))
+         return;
+     if (StdDraw.hasNextKeyTyped())
+           b = game();
     }
-
+    return;
+  }
 }

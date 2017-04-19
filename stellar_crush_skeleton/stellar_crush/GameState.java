@@ -1,15 +1,21 @@
+import java.util.*;
+
 public class GameState {
-    // Class representing the game state and implementing main game loop update step.
+  // Class representing the game state and implementing main game loop update step.
 
-    private Collection<GameObject> objects;
-    private final PlayerObject player;
+  private Collection<GameObject> objects;
+  private final PlayerObject player;
+  
+  public GameState(PlayerObject player) {
+    this.player = player;
+  }
 
-    void update(int delay) {
-        // Main game loop update step
-    }
+  void update(int delay) {
+    // Main game loop update step
+  }
 
-    private Map<GameObject,Vector> calculateForces() {
-		// Calculate the force on each object for the next update step.
-    }
+  private Map<GameObject, Vector> calculateForces() {
+    // Calculate the force on each object for the next update step.
+  }
 
 }

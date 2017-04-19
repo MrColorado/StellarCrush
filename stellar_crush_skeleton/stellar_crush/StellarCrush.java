@@ -43,7 +43,7 @@ public class StellarCrush {
   static double scale = 5e10; // plotted universe size
     
   public static boolean game() {
-    StdDraw.picture(0, 0, "res/background.png", 2, 2);
+    StdDraw.clear();
     return true;
   }
   
@@ -51,7 +51,6 @@ public class StellarCrush {
     StdDraw.setXscale(0, 1);
     StdDraw.setYscale(0, 1);
     StdDraw.clear();
-    StdDraw.picture(0, 0, "res/background.png", 2, 2);
     StdDraw.setPenColor(StdDraw.RED);
     StdDraw.text(0.5, 0.75, "STELLAR CRUSH");
     StdDraw.text(0.5, 0.65, "Press any key to start");
