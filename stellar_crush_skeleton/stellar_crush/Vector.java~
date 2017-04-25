@@ -26,7 +26,7 @@
 public class Vector { 
 
     private final int N;         // length of the vector
-    public double[] data;       // array of vector's components
+    private double[] data;       // array of vector's components
 
     // create the zero vector of length N
     public Vector(int N) {

@@ -1,20 +1,20 @@
 public class GameObject {
   // Default implementation of a game object
   
-  private Vector r;
+  public Vector r;
   private Vector v; 
   private double mass;
   
   public GameObject(Vector r, Vector v, double mass) {
-    this.r = r; 
-    this.v = v; 
+    this.r = r;
+    this.v = v;
     this.mass = mass;
   }
   
   public void move(Vector f, double dt) {
     Vector a = f.times(1/mass);
-    this.v = v.plus(a.times(dt));
-    this.r = r.plus(v.times(dt));
+    this.v = this.v.plus(a.times(dt));
+    this.r = this.r.plus(this.v.times(dt));
   }
   
   public Vector forceFrom(GameObject that) {
