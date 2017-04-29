@@ -12,6 +12,11 @@ public class PlayerObject extends GameObject implements IViewPort {
  
  public PlayerObject(Vector r, Vector v, double mass) {
    super(r, v, mass);
+   this.cam = new Camera(this, DEFAULT_FOV);
+ }
+ 
+ public Camera getCam() {
+   return this.cam;
  }
  
  void processCommand(int delay) {
@@ -25,7 +30,7 @@ public class PlayerObject extends GameObject implements IViewPort {
      if (dr != null) {
        // Example code
        if (dr.isKeyPressed(KeyEvent.VK_UP)) 
-         up = true;
+         this.getV();
        if (dr.isKeyPressed(KeyEvent.VK_DOWN)) 
          down = true;
      }
@@ -34,16 +39,19 @@ public class PlayerObject extends GameObject implements IViewPort {
  
  @Override 
  public Vector getLocation() {
-   return null;
+   return this.getR();
  }
  
  @Override
  public Vector getFacingVector() {
-   return null;
+   return this.getV().direction();
  }
  
  @Override 
- public double highlightLevel() {
-  return 0; 
+ public double highlightLevel(GameObject o, PlayerObject p) {
+   if (p.getMass() > o.getMass())
+     return 1;
+   return 0; 
  }
+ 
 }

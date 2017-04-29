@@ -1,76 +1,83 @@
 import java.util.*;
-import java.util.LinkedHashMap;
+
+// This class is inspired by the nbody slide
 
 public class GameState {
   // Class representing the game state and implementing main game loop update step.
 
   private Collection<GameObject> objects;
-  //private final PlayerObject player;
+  private final PlayerObject player;
   
-  private int N;
-  private double radius;
-  private GameObject[] orbs;
-  
-  public GameState(/*PlayerObject player*/) {
-    //this.player = player;
-    
-    N = StdIn.readInt();
-    radius = StdIn.readDouble();
-    StdDraw.setXscale(-radius, +radius);
-    StdDraw.setYscale(-radius, +radius);
-    // read in the N bodies
-    orbs = new GameObject[N];
-    for (int i = 0; i < N; i++) {
-      double rx = StdIn.readDouble();
-      double ry = StdIn.readDouble();
-      double vx = StdIn.readDouble();
-      double vy = StdIn.readDouble();
-      double mass = StdIn.readDouble();
-      double[] position = { rx, ry };
-      double[] velocity = { vx, vy };
-      Vector r = new Vector(position);
-      Vector v = new Vector(velocity);
-      orbs[i] = new GameObject(r, v, mass);
-    } 
+  public GameState(PlayerObject player) {
+    this.player = player;
+    this.objects = GameObjectLibrary.createCollection();
+    this.objects.add(this.player);    
   }
   
   public void update(double delay) {
     // Main game loop update step
-    Vector[] f = new Vector[N];
-    for (int i = 0; i < N; i++)
-      f[i] = new Vector(new double[2]);
-    
-    //Map<GameObject, Vector> data = new LinkedHashMap<GameObject, Vector>();
-    
-    for (int i = 0; i < N; i++)
-      for (int j = 0; j < N; j++)
-      if (i != j) 
-          f[i] = f[i].plus(orbs[i].forceFrom(orbs[j]));
-    
-    System.out.println("position x : " + orbs[0].r.data[0] + " position y : " + orbs[0].r.data[1]);
-    System.out.println();
-    
-    for (int i = 0; i < N; i++)
-      orbs[i].move(f[i], delay);
+    Map<GameObject, Vector> forces = calculateForces();
+    for (GameObject o : forces.keySet()) {
+      o.move(forces.get(o), delay);
+    }
   }
   
-  public void draw() {
-    for (int i = 0; i < N; i++)
-      orbs[i].draw();
-  } 
+  private void draw(Camera cam) {
+    for (GameObject o : this.objects) {
+      o.draw();
+    }
+    cam.render(this.objects);
+    cam.getDr().show(0);
+  }
 
   private Map<GameObject, Vector> calculateForces() {
-    return null;
+    Map<GameObject, Vector> map = GameObjectLibrary.createMap(this.objects);
+    for (GameObject o : this.objects) {
+      Vector nextForces = new Vector(2);
+      for (GameObject g : this.objects) {
+        if (o != g)
+          nextForces = nextForces.plus(o.forceFrom(g));
+      }
+      map.put(o, nextForces);
+    }
+    return map;
+  }
+  
+  public void checkPosition() {    
+    for (GameObject o : this.objects) {
+      double rx = o.getR().cartesian(0);
+      double ry = o.getR().cartesian(1);
+      if (rx > 5.7e10) {
+        double[] position = {11.2e10, 0.0};
+        o.setR(o.getR().minus(new Vector(position)));
+      }
+      if (ry > 5.7e10) {
+        double[] position = {0.0, 11.2e10};
+        o.setR(o.getR().minus(new Vector(position)));
+      }
+      if (rx < -5.7e10) {
+        double[] position = {11.2e10, 0.0};
+        o.setR(o.getR().plus(new Vector(position)));
+      }
+      if (ry < -5.7e10) {
+        double[] position = {0.0, 11.2e10};
+        o.setR(o.getR().plus(new Vector(position)));
+      }
+    }
   }
   
   public static void main(String[] args) {
-    
-    GameState game = new GameState();
-    double dt = Double.parseDouble(args[0]); 
+    PlayerObject fakePlayer = GameObjectLibrary.createPlayer();
+    GameState game = new GameState(fakePlayer);
+    //Camera cam = new Camera(fakePlayer, Math.PI/2.0);
+      
+    double dt = 10000; 
     while (true) {
       StdDraw.clear();
+      fakePlayer.getCam().getDr().clear();
       game.update(dt);
-      game.draw();
+      game.checkPosition();
+      game.draw(fakePlayer.getCam());
       StdDraw.show(10);
     }
   }

@@ -1,20 +1,44 @@
-public class GameObject {
+import java.awt.Color;
+
+public class GameObject /*implements Comparable<GameObject>*/ {
   // Default implementation of a game object
   
+  private Color color;
   private Vector r;
   private Vector v; 
   private double mass;
+  private double size; 
   
   public GameObject(Vector r, Vector v, double mass) {
-    this.r = r; 
-    this.v = v; 
+    int red = (int)(255 * Math.random());
+    int green = (int)(255 * Math.random());
+    int blue = (int)(255 * Math.random());
+    this.color = new Color(red, green, blue);
+    this.r = r;
+    this.v = v;
     this.mass = mass;
+    this.size = sizeFromMass(mass);
+  }
+  
+  public Vector getR () {
+    return this.r;
+  }
+  
+  public Vector getV() {
+    return this.v;
+  }
+  
+  public double sizeFromMass(double mass) {
+    double result = mass / 1e25;
+    result /= Math.PI;
+    result = Math.sqrt(result);
+    return result * 0.03;
   }
   
   public void move(Vector f, double dt) {
     Vector a = f.times(1/mass);
-    this.v = v.plus(a.times(dt));
-    this.r = r.plus(v.times(dt));
+    this.v = this.v.plus(a.times(dt));
+    this.r = this.r.plus(this.v.times(dt));
   }
   
   public Vector forceFrom(GameObject that) {
@@ -26,7 +50,20 @@ public class GameObject {
   }
   
   public void draw() {
-    StdDraw.setPenRadius(0.025);
+    StdDraw.setPenRadius(this.size);
+    StdDraw.setPenColor(color);
     StdDraw.point(r.cartesian(0), r.cartesian(1));
   }
+  
+  public double dist(Vector player) {
+    double result = Math.pow(player.getRx() - this.r.getRx(), 2) + Math.pow(player.getRy() - this.r.getRy(), 2);
+    result = Math.sqrt(result);
+    return result;
+  }
+  
+  /*public int compareTo(GameObject that) {
+        if      (this.count < that.count) return -1;
+        else if (this.count > that.count) return +1;
+        else                              return  0;
+    }*/
 }
