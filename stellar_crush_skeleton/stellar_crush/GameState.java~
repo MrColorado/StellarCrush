@@ -1,9 +1,4 @@
 import java.util.*;
-import java.util.LinkedHashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 // This class is inspired by the nbody slide
 
@@ -11,88 +6,76 @@ public class GameState {
   // Class representing the game state and implementing main game loop update step.
 
   private Collection<GameObject> objects;
-  
   private final PlayerObject player;
-  private Map<GameObject, Vector> data;
   
   public GameState(PlayerObject player) {
     this.player = player;
-    this.data = GameObjectLibrary.createMap();
-    this.data.put(this.player, new Vector(2));    
-  }
-  
-  public Map<GameObject, Vector> getMap() {
-    return this.data;
+    this.objects = GameObjectLibrary.createCollection();
+    this.objects.add(this.player);    
   }
   
   public void update(double delay) {
     // Main game loop update step
-    this.data = calculateForces();
-    Set<Entry<GameObject, Vector>> setData = this.data.entrySet();
-    Iterator<Entry<GameObject , Vector>> it = setData.iterator();    
-    while (it.hasNext()){
-      Entry<GameObject, Vector> e = it.next();
-      e.getKey().move(e.getValue(), delay);
+    Map<GameObject, Vector> forces = calculateForces();
+    for (GameObject o : forces.keySet()) {
+      o.move(forces.get(o), delay);
     }
   }
   
-  private void draw() {
-    Set<Entry<GameObject, Vector>> setData = this.data.entrySet();
-    Iterator<Entry<GameObject , Vector>> it = setData.iterator();    
-    while (it.hasNext()){
-      it.next().getKey().draw();
+  public void draw(Camera cam) {
+    for (GameObject o : this.objects) {
+      o.draw();
     }
+    cam.render(this.objects);
+    cam.getDr().show(0);
   }
 
   private Map<GameObject, Vector> calculateForces() {
-    Map<GameObject, Vector> newData = new LinkedHashMap<GameObject, Vector>();
-    Set<Entry<GameObject, Vector>> setData = this.data.entrySet();
-    Iterator<Entry<GameObject , Vector>> it1 = setData.iterator();
-    
-    while (it1.hasNext()){
-      Entry<GameObject, Vector> e1 = it1.next();
+    Map<GameObject, Vector> map = GameObjectLibrary.createMap(this.objects);
+    for (GameObject o : this.objects) {
       Vector nextForces = new Vector(2);
-      Set<Entry<GameObject, Vector>> setData2 = this.data.entrySet();
-      Iterator<Entry<GameObject , Vector>> it2 = setData2.iterator();
-      
-      while (it2.hasNext()) {
-        Entry<GameObject, Vector> e2 = it2.next();
-        if (e1.getKey() != e2.getKey())
-          nextForces = nextForces.plus(e1.getKey().forceFrom(e2.getKey()));
+      for (GameObject g : this.objects) {
+        if (o != g)
+          nextForces = nextForces.plus(o.forceFrom(g));
       }
-      newData.put(e1.getKey(), nextForces);
+      map.put(o, nextForces);
     }
-    return newData;
+    return map;
   }
   
-  public void checkPosition() {
-    Set<Entry<GameObject, Vector>> setData = this.data.entrySet();
-    Iterator<Entry<GameObject , Vector>> it = setData.iterator();    
-    while (it.hasNext()){
-      Entry<GameObject, Vector> e = it.next();
-      double rx = e.getKey().getR().getData()[0];
-      double ry = e.getKey().getR().getData()[1];
-      if (rx > 5.7e10)
-        e.getKey().getR().setRx(-5.5e10);
-      if (ry > 5.7e10)
-        e.getKey().getR().setRy(-5.5e10);
-      if (rx < -5.7e10)
-        e.getKey().getR().setRx(5.5e10);
-      if (ry < -5.7e10)
-        e.getKey().getR().setRy(5.5e10);
+  public void checkPosition() {    
+    for (GameObject o : this.objects) {
+      double rx = o.getR().cartesian(0);
+      double ry = o.getR().cartesian(1);
+      if (rx > 5.7e10) {
+        double[] position = {11.2e10, 0.0};
+        o.setR(o.getR().minus(new Vector(position)));
+      }
+      if (ry > 5.7e10) {
+        double[] position = {0.0, 11.2e10};
+        o.setR(o.getR().minus(new Vector(position)));
+      }
+      if (rx < -5.7e10) {
+        double[] position = {11.2e10, 0.0};
+        o.setR(o.getR().plus(new Vector(position)));
+      }
+      if (ry < -5.7e10) {
+        double[] position = {0.0, 11.2e10};
+        o.setR(o.getR().plus(new Vector(position)));
+      }
     }
   }
   
   public static void main(String[] args) {
     PlayerObject fakePlayer = GameObjectLibrary.createPlayer();
-    Camera cam = new Camera(fakePlayer, 0.5);
-    GameState game = new GameState(fakePlayer);
+    GameState game = new GameState(fakePlayer);      
     double dt = 10000; 
     while (true) {
       StdDraw.clear();
+      fakePlayer.getCam().getDr().clear();
       game.update(dt);
       game.checkPosition();
-      game.draw();
+      game.draw(fakePlayer.getCam());
       StdDraw.show(10);
     }
   }

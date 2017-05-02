@@ -59,27 +59,6 @@ public class Vector {
             this.data[i] = data[i];
     }
 */
-    
-    public double[] getData() {
-      return this.data;
-    }
-    
-    public double getRx() {
-      return this.data[0];
-    }
-    
-    public double getRy() {
-      return this.data[1];
-    }
-    
-    public void setRx(double rx) {
-      this.data[0] = rx;
-    }
-    
-    public void setRy(double ry) {
-      this.data[1] = ry;
-    }
-    
     // return the length of the vector
     public int length() {
         return N;

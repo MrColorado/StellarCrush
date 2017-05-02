@@ -22,7 +22,7 @@ public class GameState {
     }
   }
   
-  private void draw(Camera cam) {
+  public void draw(Camera cam) {
     for (GameObject o : this.objects) {
       o.draw();
     }
@@ -68,9 +68,7 @@ public class GameState {
   
   public static void main(String[] args) {
     PlayerObject fakePlayer = GameObjectLibrary.createPlayer();
-    GameState game = new GameState(fakePlayer);
-    //Camera cam = new Camera(fakePlayer, Math.PI/2.0);
-      
+    GameState game = new GameState(fakePlayer);      
     double dt = 10000; 
     while (true) {
       StdDraw.clear();

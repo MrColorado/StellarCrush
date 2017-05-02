@@ -9,11 +9,18 @@ public class PlayerObject extends GameObject implements IViewPort {
  private static final double FOV_INCREMENT = Math.PI/36; // rotation speed
 
  private Camera cam;
+ private double rot;
  
  public PlayerObject(Vector r, Vector v, double mass) {
    super(r, v, mass);
+   this.cam = new Camera(this, DEFAULT_FOV);
+   this.rot = 0;
  }
-
+ 
+ public Camera getCam() {
+   return this.cam;
+ }
+ 
  void processCommand(int delay) {
    boolean up; 
    boolean down;
@@ -25,9 +32,16 @@ public class PlayerObject extends GameObject implements IViewPort {
      if (dr != null) {
        // Example code
        if (dr.isKeyPressed(KeyEvent.VK_UP)) 
-         up = true;
+         this.getV();
        if (dr.isKeyPressed(KeyEvent.VK_DOWN)) 
          down = true;
+       if (dr.isKeyPressed(KeyEvent. VK_LEFT)) {
+         this.rot += FOV_INCREMENT;
+         this.rot %= 2 * Math.PI;
+       }
+       if (dr.isKeyPressed(KeyEvent.VK_RIGHT)) 
+         this.rot += FOV_INCREMENT;
+         this.rot %= 2 * Math.PI;
      }
    }
  }
@@ -38,13 +52,13 @@ public class PlayerObject extends GameObject implements IViewPort {
  }
  
  @Override
- public Vector getFacingVector() {
-   return this.getV().direction();
+ public double getFacingVector() {
+   return this.rot;
  }
  
  @Override 
- public double highlightLevel() {
-   
-  return 0; 
+ public double highlightLevel(GameObject o) {
+   return 0; 
  }
+ 
 }

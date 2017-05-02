@@ -28,10 +28,11 @@ public class Camera {
     Vector dir = this.holder.getFacingVector();
     dr.clear();
     for(GameObject o : objects) {
-      double deltaX = (pos.cartesian(0) - o.getR().cartesian(0)) / StellarCrush.scale;
-      double deltaY = (pos.cartesian(1) - o.getR().cartesian(1)) / StellarCrush.scale;
-      double angle = Math.atan2(deltaY, deltaX) /*- Math.atan2(dir.cartesian(1), dir.cartesian(0))*/;
-      if (Math.abs(angle) < FOV/2.0)
+      boolean same = pos.cartesian(0) != o.getR().cartesian(0) || pos.cartesian(1) != o.getR().cartesian(1);
+      double deltaX = pos.cartesian(0) - o.getR().cartesian(0);
+      double deltaY = pos.cartesian(1) - o.getR().cartesian(1);
+      double angle = Math.atan2(deltaY, deltaX) - Math.atan2(dir.cartesian(1), dir.cartesian(0));
+      if (Math.abs(angle) < FOV/2.0 && same)
         draw(o, angle);
     }
   }
