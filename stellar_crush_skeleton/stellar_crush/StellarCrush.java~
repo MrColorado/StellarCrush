@@ -48,7 +48,7 @@ public class StellarCrush {
     while (true) {
       StdDraw.clear();
       player.getCam().getDr().clear();
-      //player.processCommand(GAME_DELAY_TIME);
+      player.processCommand(GAME_DELAY_TIME);
       game.update(GAME_DELAY_TIME);
       game.checkPosition();
       game.draw(player.getCam());

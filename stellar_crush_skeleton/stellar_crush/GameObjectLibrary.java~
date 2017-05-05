@@ -2,9 +2,6 @@ import java.util.*;
 import java.util.Random;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.HashSet;
 
 public class GameObjectLibrary {
@@ -19,17 +16,19 @@ public class GameObjectLibrary {
   private static final double PLAYER_MASS = 1E25;
   
   public static PlayerObject createPlayer() {
-    PlayerObject player = new PlayerObject(new Vector(2), new Vector(2), PLAYER_MASS);
+    double[] velocity = {0.0, 0.0};
+    Vector v = new Vector(velocity);
+    PlayerObject player = new PlayerObject(new Vector(2), v, PLAYER_MASS);
     return player;
   }
   
-  public static Map<GameObject, Vector> createMap () {
+  public static Collection<GameObject> createCollection() {
     int n = 6;
     double distance = 2.0 * Math.PI / (double)n;
     Random rand = new Random();
     StdDraw.setXscale(-5.0e10 , 5.0e10 );
     StdDraw.setYscale(-5.0e10 , 5.0e10 );
-    Map<GameObject, Vector> data = new LinkedHashMap<GameObject, Vector>();
+    Collection<GameObject> data = new HashSet<GameObject>();
     
     // read in the N bodies
     for (int i = 0; i < n; i++) {
@@ -45,25 +44,24 @@ public class GameObjectLibrary {
       double mass = Math.random() * ASTEROID_MAX_MASS;
       if (mass < ASTEROID_MIN_MASS)
         mass = ASTEROID_MIN_MASS;
-      System.out.println(rx + "  " + ry + "  " + vx + "  " + vy + "  " + mass);
       double[] position = { rx, ry };
       double[] velocity = { vx, vy };
       Vector r = new Vector(position);
       Vector v = new Vector(velocity);
       GameObject newPlanet = new GameObject(r, v, mass);
-      data.put(newPlanet, new Vector(2));
+      data.add(newPlanet);
     }
     return data;
   }
   
-  public static Map<GameObject, Vector> createMapFromFile () {
+  public static Collection<GameObject> createCollectionFromFile () {
     int N = StdIn.readInt();
     double radius = StdIn.readDouble();
     StdDraw.setXscale(-radius, +radius);
     StdDraw.setYscale(-radius, +radius);
     
     // read in the N bodies
-    Map<GameObject, Vector> data = new LinkedHashMap<GameObject, Vector>();
+    Collection<GameObject> data = new HashSet<GameObject>();
     for (int i = 0; i < N; i++) {
       double rx = StdIn.readDouble();
       double ry = StdIn.readDouble();
@@ -76,19 +74,16 @@ public class GameObjectLibrary {
       Vector v = new Vector(velocity);
       
       GameObject newPlanet = new GameObject(r, v, mass);
-      data.put(newPlanet, new Vector(2));
+      data.add(newPlanet);
     }
     return data;
   }
   
-  public static Collection<GameObject> createCollection(Map<GameObject, Vector> data) {
-    Collection<GameObject> result = new HashSet<GameObject>();
-    Set<Entry<GameObject, Vector>> setData = data.entrySet();
-    Iterator<Entry<GameObject ,Vector>> it = setData.iterator();    
-    while (it.hasNext()){
-      Entry<GameObject, Vector> e = it.next();
-      result.add(e.getKey());
+  public static Map<GameObject, Vector> createMap (Collection<GameObject> object) {
+    Map<GameObject, Vector> map = new LinkedHashMap<GameObject, Vector>();
+    for (GameObject o : object) { 
+      map.put(o, new Vector(2));
     }
-    return result;
+    return map;
   }
 }

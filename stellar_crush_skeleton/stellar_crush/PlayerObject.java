@@ -14,7 +14,11 @@ public class PlayerObject extends GameObject implements IViewPort {
  public PlayerObject(Vector r, Vector v, double mass) {
    super(r, v, mass);
    this.cam = new Camera(this, DEFAULT_FOV);
-   this.rot = Math.PI;
+   this.rot = 0;
+ }
+ 
+ public double getRot() {
+   return this.rot;
  }
  
  public Camera getCam() {
@@ -24,24 +28,16 @@ public class PlayerObject extends GameObject implements IViewPort {
  void processCommand(int delay) {
    boolean up; 
    boolean down;
-   // Process keys applying to the player
-   // Retrieve 
    if (cam != null) {
      // No commands if no draw canvas to retrieve them from!
-     //Draw dr = cam.getDraw();
-     //if (dr != null) {
-       // Example code
-       if (this.cam.getDr().isKeyPressed(KeyEvent.VK_UP))
-         this.setR(this.getR().minus(this.getFacingVector().times(5e8)));
-       if (this.cam.getDr().isKeyPressed(KeyEvent.VK_DOWN)) 
-         this.setR(this.getR().plus(this.getFacingVector().times(5e8)));
-       if (this.cam.getDr().isKeyPressed(KeyEvent.VK_LEFT)) {
-         this.rot += FOV_INCREMENT;
-       }
-       if (this.cam.getDr().isKeyPressed(KeyEvent.VK_RIGHT)) {
-         this.rot -= FOV_INCREMENT; 
-       }
-     //}
+     if (this.cam.getDr().isKeyPressed(KeyEvent.VK_UP))
+       this.setR(this.getR().minus(this.getFacingVector().times(5e8)));
+     if (this.cam.getDr().isKeyPressed(KeyEvent.VK_DOWN)) 
+       this.setR(this.getR().plus(this.getFacingVector().times(5e8)));
+     if (this.cam.getDr().isKeyPressed(KeyEvent.VK_LEFT)) 
+       this.rot += FOV_INCREMENT;
+     if (this.cam.getDr().isKeyPressed(KeyEvent.VK_RIGHT)) 
+       this.rot -= FOV_INCREMENT; 
    }
  }
  

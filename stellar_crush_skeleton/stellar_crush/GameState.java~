@@ -25,6 +25,8 @@ public class GameState {
   public void draw(Camera cam) {
     for (GameObject o : this.objects) {
       o.draw();
+      //if (o == this.player) 
+      // o.draw(this.player);
     }
     cam.render(this.objects);
     cam.getDr().show(0);
@@ -63,6 +65,12 @@ public class GameState {
         double[] position = {0.0, 11.2e10};
         o.setR(o.getR().plus(new Vector(position)));
       }
+    }
+  }
+  
+  public void checkContact () {
+    for (Object o : this.objects) {
+      
     }
   }
   

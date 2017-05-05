@@ -17,7 +17,7 @@ public class GameObject /*implements Comparable<GameObject>*/ {
     this.r = r;
     this.v = v;
     this.mass = mass;
-    this.size = sizeFromMass(mass);
+    this.size = 0.025;//sizeFromMass(mass);
   }
   
   public double getMass() {
@@ -70,6 +70,18 @@ public class GameObject /*implements Comparable<GameObject>*/ {
     StdDraw.setPenColor(this.color);
     StdDraw.point(this.r.cartesian(0), this.r.cartesian(1));
   }
+  
+  
+ public void draw(PlayerObject player) {
+   Vector dir = player.getFacingVector();
+   //Math.atan2(dir.cartesian(1), dir.cartesian(0))
+   double posX = Math.cos(dir.cartesian(0)) * this.r.cartesian(0) * 10000;
+   double posY = Math.sin(dir.cartesian(1)) * this.r.cartesian(1) * 10000;
+   StdDraw.setPenColor(this.color);
+   StdDraw.setPenRadius(this.getSize() / 10);
+   StdDraw.line(this.r.cartesian(0), this.r.cartesian(1), posX, posY);
+  }
+ 
   
   public double dist(Vector player) {
     double result = Math.pow(player.cartesian(0) - this.r.cartesian(0), 2) + Math.pow(player.cartesian(1) - this.r.cartesian(1), 2);

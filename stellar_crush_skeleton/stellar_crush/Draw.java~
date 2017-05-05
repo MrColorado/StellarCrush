@@ -309,6 +309,7 @@ public final class Draw implements ActionListener, MouseListener, MouseMotionLis
      * @throws IllegalArgumentException if the width or height is 0 or negative
      */
     public void setLocationOnScreen(int x, int y) {
+        if (x <= 0 || y <= 0) throw new IllegalArgumentException();
         frame.setLocation(x, y);
     }
 
