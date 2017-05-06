@@ -1,19 +1,24 @@
 import java.util.*;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.time.Duration;
+import java.time.Instant;
+
 
 // This class is inspired by the nbody slide
 
 public class GameState {
   // Class representing the game state and implementing main game loop update step.
 
-  private Collection<GameObject> objects;
   private final PlayerObject player;
+  private Collection<GameObject> objects;
+  private Instant previousTime;
   
   public GameState(PlayerObject player) {
     this.player = player;
     this.objects = GameObjectLibrary.createCollection();
-    this.objects.add(this.player);    
+    this.objects.add(this.player);
+    this.previousTime = Instant.now();
   }
   
   public Collection<GameObject> getObjects() {
@@ -23,9 +28,19 @@ public class GameState {
   public void update(double delay) {
     // Main game loop update step
     Map<GameObject, Vector> forces = calculateForces();
+    Duration deltaTime = Duration.between(this.previousTime, Instant.now());
+    this.previousTime = Instant.now();
     for (GameObject o : forces.keySet()) {
       o.move(forces.get(o), delay);
     }
+    GameObject newObject = null;
+    for (GameObject o : this.objects) {
+      o.setTime(o.getTime() - deltaTime.toMillis());
+      if (o.getTime() <= 0 && o != player)
+        newObject = o.split(); 
+    }
+    if (newObject != null)
+      this.objects.add(newObject);
     forces = null;
     this.checkPosition();
     this.checkContact();
@@ -79,12 +94,8 @@ public class GameState {
   
   public void checkContact() {
     Collection<GameObject> data = new HashSet<GameObject>();
-    Iterator it1 = this.objects.iterator();
-    while(it1.hasNext()) {
-      GameObject o = (GameObject)it1.next();
-      Iterator it2 = this.objects.iterator();
-      while(it2.hasNext()) {
-        GameObject g = (GameObject)it2.next();
+    for (GameObject o : this.objects) {
+      for (GameObject g : this.objects) {
         if (o != g && o.getR().distanceTo(g.getR()) / 5.0e10 < o.getLevel() * 0.001 + 0.025 && o.getLevel() > g.getLevel()) {          
           data.add(g);
           o.setLevel(o.getLevel() + g.getLevel());
@@ -94,19 +105,5 @@ public class GameState {
     }
     for(GameObject o : data) 
       this.objects.remove(o);
-  }
-  
-  public static void main(String[] args) {
-    PlayerObject fakePlayer = GameObjectLibrary.createPlayer();
-    GameState game = new GameState(fakePlayer);      
-    double dt = 10000; 
-    while (true) {
-      StdDraw.clear();
-      fakePlayer.getCam().getDr().clear();
-      game.update(dt);
-      game.checkPosition();
-      game.draw(fakePlayer.getCam());
-      StdDraw.show(10);
-    }
   }
 }
