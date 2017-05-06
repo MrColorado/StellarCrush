@@ -49,7 +49,7 @@ public class Camera {
   
   public void draw(GameObject o, double angle) {
     this.dr.setLocationOnScreen(width / 2 + 1, 0);
-    this.dr.setPenRadius(o.getSize());
+    this.dr.setPenRadius(o.getLevel() * 0.01 + 0.025);
     this.dr.setPenColor(o.getColor());
     this.dr.point(Math.sin(angle), 0);
   }

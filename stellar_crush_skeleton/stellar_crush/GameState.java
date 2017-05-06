@@ -1,4 +1,6 @@
 import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
 
 // This class is inspired by the nbody slide
 
@@ -14,19 +16,26 @@ public class GameState {
     this.objects.add(this.player);    
   }
   
+  public Collection<GameObject> getObjects() {
+    return this.objects;
+  }
+  
   public void update(double delay) {
     // Main game loop update step
     Map<GameObject, Vector> forces = calculateForces();
     for (GameObject o : forces.keySet()) {
       o.move(forces.get(o), delay);
     }
+    forces = null;
+    this.checkPosition();
+    this.checkContact();
   }
   
   public void draw(Camera cam) {
     for (GameObject o : this.objects) {
       o.draw();
-      if (o == this.player) 
-        o.draw(this.player);
+      /*if (o == this.player) 
+        o.draw(this.player);*/
     }
     cam.render(this.objects);
     cam.getDr().show(0);
@@ -68,10 +77,23 @@ public class GameState {
     }
   }
   
-  public void checkContact () {
-    for (Object o : this.objects) {
-      
+  public void checkContact() {
+    Collection<GameObject> data = new HashSet<GameObject>();
+    Iterator it1 = this.objects.iterator();
+    while(it1.hasNext()) {
+      GameObject o = (GameObject)it1.next();
+      Iterator it2 = this.objects.iterator();
+      while(it2.hasNext()) {
+        GameObject g = (GameObject)it2.next();
+        if (o != g && o.getR().distanceTo(g.getR()) / 5.0e10 < o.getLevel() * 0.001 + 0.025 && o.getLevel() > g.getLevel()) {          
+          data.add(g);
+          o.setLevel(o.getLevel() + g.getLevel());
+          o.setMass(o.getMass() + g.getMass());
+        }
+      }
     }
+    for(GameObject o : data) 
+      this.objects.remove(o);
   }
   
   public static void main(String[] args) {

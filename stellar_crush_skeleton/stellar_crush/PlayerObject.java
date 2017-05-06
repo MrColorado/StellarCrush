@@ -31,9 +31,9 @@ public class PlayerObject extends GameObject implements IViewPort {
    if (cam != null) {
      // No commands if no draw canvas to retrieve them from!
      if (this.cam.getDr().isKeyPressed(KeyEvent.VK_UP))
-       this.setR(this.getR().minus(this.getFacingVector().times(5e8)));
+       this.setR(this.getR().minus(this.getFacingVector().times(2e8)));
      if (this.cam.getDr().isKeyPressed(KeyEvent.VK_DOWN)) 
-       this.setR(this.getR().plus(this.getFacingVector().times(5e8)));
+       this.setR(this.getR().plus(this.getFacingVector().times(2e8)));
      if (this.cam.getDr().isKeyPressed(KeyEvent.VK_LEFT)) 
        this.rot += FOV_INCREMENT;
      if (this.cam.getDr().isKeyPressed(KeyEvent.VK_RIGHT)) 
@@ -51,6 +51,8 @@ public class PlayerObject extends GameObject implements IViewPort {
    double[] rotation = {Math.cos(this.rot), Math.sin(this.rot)};
    Vector v = new Vector(rotation);
    v = VectorUtil.direction(v);
+   Vector w = VectorUtil.direction(this.getR());
+   v.plus(w);
    return v;
  }
  

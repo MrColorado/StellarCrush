@@ -1,4 +1,5 @@
 import java.awt.event.KeyEvent;
+import java.awt.Dimension;
 
 /* Acknowledgements/notes:
  - Some of this code based on code for Rubrica by Steve Kroon
@@ -57,6 +58,12 @@ public class StellarCrush {
   }
   
   public static void main(String[] args) {
+    // https://www.greenfoot.org/topics/1127
+    Dimension scrnSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+    int height = (int)scrnSize.getHeight();
+    int width  = (int)scrnSize.getWidth();
+    //
+    StdDraw.setCanvasSize(width / 2, (int)(height * 0.90));
     StdDraw.setXscale(0, 1);
     StdDraw.setYscale(0, 1);
     StdDraw.clear();

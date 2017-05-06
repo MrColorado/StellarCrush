@@ -25,8 +25,8 @@ public class GameState {
   public void draw(Camera cam) {
     for (GameObject o : this.objects) {
       o.draw();
-      //if (o == this.player) 
-      // o.draw(this.player);
+      if (o == this.player) 
+        o.draw(this.player);
     }
     cam.render(this.objects);
     cam.getDr().show(0);

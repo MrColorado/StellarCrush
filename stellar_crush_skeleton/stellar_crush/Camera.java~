@@ -1,4 +1,5 @@
 import java.util.*;
+import java.awt.Dimension;
 
 public class Camera {
   // Virtual camera - uses a plane one unit away from the focal point
@@ -8,18 +9,27 @@ public class Camera {
   private final IViewPort holder; // Object from whose perspective the first-person view is drawn
   private Draw dr; // Canvas on which to draw
   private double FOV; // field of view of camera
+  private final Dimension scrnSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+  private final int height = (int)scrnSize.getHeight();
+  private final int width  = (int)scrnSize.getWidth();
 
   public Camera(IViewPort holder, double FOV) {
     // Constructs a camera with field of view FOV, held by holder, and rendered on canvas dr.
     this.holder = holder;
     this.FOV = FOV;
     this.dr = new Draw();
+    this.dr.setLocationOnScreen(width / 2, 1);
+    this.dr.setCanvasSize(width / 2, (int)(height * 0.90));
     this.dr.setXscale(FOV/2.0, -FOV/2.0);
     this.dr.setYscale(-1.0, 1.0);
   }
 
   public Draw getDr() {
     return this.dr;
+  }
+  
+  public Draw getDraw() {
+    return new Draw();
   }
   
   void render(Collection<GameObject> objects) {
@@ -38,12 +48,9 @@ public class Camera {
   }
   
   public void draw(GameObject o, double angle) {
-    dr.setPenRadius(o.getSize());
-    dr.setPenColor(o.getColor());
-    dr.point(Math.sin(angle), 0);
-  }
-  
-  public Draw getDraw() {
-    return new Draw();
+    this.dr.setLocationOnScreen(width / 2 + 1, 0);
+    this.dr.setPenRadius(o.getSize());
+    this.dr.setPenColor(o.getColor());
+    this.dr.point(Math.sin(angle), 0);
   }
 }

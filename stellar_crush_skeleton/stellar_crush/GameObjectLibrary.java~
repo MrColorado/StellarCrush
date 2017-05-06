@@ -13,7 +13,7 @@ public class GameObjectLibrary {
   private static final double ASTEROID_WIDTH = 0.2; // Width of asteroid belt
   private static final double ASTEROID_MIN_MASS = 1E24;
   private static final double ASTEROID_MAX_MASS = 1E26;
-  private static final double PLAYER_MASS = 1E25;
+  private static final double PLAYER_MASS = 1E26;
   
   public static PlayerObject createPlayer() {
     double[] velocity = {0.0, 0.0};

@@ -73,11 +73,13 @@ public class GameObject /*implements Comparable<GameObject>*/ {
   
   
  public void draw(PlayerObject player) {
-    double posX = Math.cos(player.getRot()) * this.r.cartesian(0) * 10000;
-    double posY = Math.sin(player.getRot()) * this.r.cartesian(1) * 10000;
-    StdDraw.setPenColor(this.color);
-    StdDraw.setPenRadius(this.getSize() / 10);
-    StdDraw.line(this.r.cartesian(0), this.r.cartesian(1), posX, posY);
+   Vector dir = player.getFacingVector();
+   //Math.atan2(dir.cartesian(1), dir.cartesian(0))
+   double posX = Math.cos(dir.cartesian(0)) + 10000 + this.r.cartesian(0);
+   double posY = Math.sin(dir.cartesian(1)) + 10000 + this.r.cartesian(0);
+   StdDraw.setPenColor(this.color);
+   StdDraw.setPenRadius(this.getSize() / 10);
+   StdDraw.line(this.r.cartesian(0), this.r.cartesian(1), posX, posY);
   }
  
   
@@ -86,10 +88,4 @@ public class GameObject /*implements Comparable<GameObject>*/ {
     result = Math.sqrt(result);
     return result;
   }
-  
-  /*public int compareTo(GameObject that) {
-        if      (this.count < that.count) return -1;
-        else if (this.count > that.count) return +1;
-        else                              return  0;
-    }*/
 }

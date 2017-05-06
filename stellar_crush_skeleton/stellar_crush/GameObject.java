@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.util.Random;
 
 public class GameObject /*implements Comparable<GameObject>*/ {
   // Default implementation of a game object
@@ -7,7 +8,7 @@ public class GameObject /*implements Comparable<GameObject>*/ {
   private Vector r;
   private Vector v; 
   private double mass;
-  private double size; 
+  private double level; 
   
   public GameObject(Vector r, Vector v, double mass) {
     int red = (int)(255 * Math.random());
@@ -17,15 +18,16 @@ public class GameObject /*implements Comparable<GameObject>*/ {
     this.r = r;
     this.v = v;
     this.mass = mass;
-    this.size = 0.025;//sizeFromMass(mass);
+    Random rand = new Random();
+    this.level = rand.nextInt(6) + 4; 
   }
   
   public double getMass() {
     return this.mass;
   }
   
-  public double getSize() {
-    return this.size;
+  public double getLevel() {
+    return this.level;
   }
   
   public Color getColor() {
@@ -42,6 +44,14 @@ public class GameObject /*implements Comparable<GameObject>*/ {
   
   public void setR(Vector r) {
     this.r = r;
+  }
+  
+  public void setLevel(double level) {
+    this.level = level;
+  }
+  
+  public void setMass(double mass) {
+    this.mass = mass;
   }
   
   public double sizeFromMass(double mass) {
@@ -66,7 +76,7 @@ public class GameObject /*implements Comparable<GameObject>*/ {
   }
   
   public void draw() {
-    StdDraw.setPenRadius(this.size);
+    StdDraw.setPenRadius(this.level * 0.001 + 0.025);
     StdDraw.setPenColor(this.color);
     StdDraw.point(this.r.cartesian(0), this.r.cartesian(1));
   }
@@ -75,10 +85,10 @@ public class GameObject /*implements Comparable<GameObject>*/ {
  public void draw(PlayerObject player) {
    Vector dir = player.getFacingVector();
    //Math.atan2(dir.cartesian(1), dir.cartesian(0))
-   double posX = Math.cos(dir.cartesian(0)) * this.r.cartesian(0) * 10000;
-   double posY = Math.sin(dir.cartesian(1)) * this.r.cartesian(1) * 10000;
+   double posX = Math.cos(dir.cartesian(0)) + 10000 + this.r.cartesian(0);
+   double posY = Math.sin(dir.cartesian(1)) + 10000 + this.r.cartesian(0);
    StdDraw.setPenColor(this.color);
-   StdDraw.setPenRadius(this.getSize() / 10);
+   //StdDraw.setPenRadius(this.getSize() / 10);
    StdDraw.line(this.r.cartesian(0), this.r.cartesian(1), posX, posY);
   }
  
@@ -88,10 +98,4 @@ public class GameObject /*implements Comparable<GameObject>*/ {
     result = Math.sqrt(result);
     return result;
   }
-  
-  /*public int compareTo(GameObject that) {
-        if      (this.count < that.count) return -1;
-        else if (this.count > that.count) return +1;
-        else                              return  0;
-    }*/
 }
