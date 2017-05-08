@@ -1,5 +1,7 @@
 import java.util.*;
 import java.awt.Dimension;
+import java.util.TreeSet;
+import java.util.Comparator;   
 
 public class Camera {
   // Virtual camera - uses a plane one unit away from the focal point
@@ -24,8 +26,8 @@ public class Camera {
     this.holder = holder;
     this.FOV = FOV;
     this.dr = new Draw();
-    this.dr.setLocationOnScreen(width / 2, 1);
-    this.dr.setCanvasSize(width / 2, (int)(height * 0.90));
+    this.dr.setLocationOnScreen(this.width / 2, 1);
+    this.dr.setCanvasSize(this.width / 2, (int)(height * 0.90));
     this.dr.setXscale(FOV/2.0, -FOV/2.0);
     this.dr.setYscale(-1.0, 1.0);
   }
@@ -50,12 +52,22 @@ public class Camera {
   *                                     *
   **************************************/
   
+  public TreeSet<GameObject> createTreeSet(Collection<GameObject> objects) {
+    Comparator<GameObject> comparator = new DistComparator(this.holder);
+    TreeSet<GameObject> tree = new TreeSet<GameObject>(comparator);
+    for (GameObject o : objects) {
+      tree.add(o);
+    }
+    return tree;
+  }
+  
   void render(Collection<GameObject> objects, PlayerObject player) {
     // Renders the collection from the camera perspective
     Vector pos = this.holder.getLocation();
     Vector dir = this.holder.getFacingVector();
+    TreeSet<GameObject> tree = createTreeSet(objects);
     dr.clear();
-    for(GameObject o : objects) {
+    for(GameObject o : tree) {
       boolean same = pos.cartesian(0) != o.getR().cartesian(0) || pos.cartesian(1) != o.getR().cartesian(1);
       double deltaX = pos.cartesian(0) - o.getR().cartesian(0);
       double deltaY = pos.cartesian(1) - o.getR().cartesian(1);
@@ -69,14 +81,22 @@ public class Camera {
   }
   
   public void draw(GameObject o, double angle) {
+    double dist = this.holder.getLocation().distanceTo(o.getR());
     this.dr.setLocationOnScreen(width / 2 + 1, 0);
+    if (dist > 0)
+      this.dr.setPenRadius(o.sizeToDisplay(dist, 0));
+    else 
     this.dr.setPenRadius(o.getLevel() * 0.01 + 0.025);
     this.dr.setPenColor(o.getColor());
     this.dr.point(Math.sin(angle), 0);
   }
   
   public void drawSup(GameObject o, double angle) {
+    double dist = this.holder.getLocation().distanceTo(o.getR());
     this.dr.setLocationOnScreen(width / 2 + 1, 0);
+    if (dist > 0)
+      this.dr.setPenRadius(o.sizeToDisplay(dist, 0.005));
+    else 
     this.dr.setPenRadius(o.getLevel() * 0.01 + 0.030);
     this.dr.setPenColor(Draw.RED);
     this.dr.point(Math.sin(angle), 0);

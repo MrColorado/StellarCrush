@@ -33,7 +33,7 @@ public class GameObjectLibrary {
   **************************************/
   
   public static Collection<GameObject> createCollection() {
-    int n = 20;
+    int n = 50;
     double distance = 2.0 * Math.PI / (double)n;
     Random rand = new Random();
     StdDraw.setXscale(-5.0e10 , 5.0e10 );

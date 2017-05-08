@@ -44,8 +44,6 @@ public class PlayerObject extends GameObject implements IViewPort {
   **************************************/
  
  void processCommand(int delay) {
-   boolean up; 
-   boolean down;
    if (cam != null) {
      // No commands if no draw canvas to retrieve them from!
      if (this.cam.getDr().isKeyPressed(KeyEvent.VK_UP))
@@ -59,23 +57,27 @@ public class PlayerObject extends GameObject implements IViewPort {
    }
  }
  
-public int compare(GameObject o, GameObject g) {
-   double distO = this.getR().distanceTo(o.getR());
-   double distG = this.getR().distanceTo(g.getR());
-   if (distO > distG)
-     return 1;
-   if (distO == distG)
-     return 0;
-   return -1;
- }
-
+ @Override
+ public void draw() {
+   super.draw(); 
+   /*Vector dir = this.getFacingVector();
+    double posX = Math.cos(dir.cartesian(0)) * this.getR().cartesian(0);
+    double posY = Math.sin(dir.cartesian(1)) * this.getR().cartesian(0);
+    StdDraw.setPenColor(StdDraw.RED);
+    StdDraw.setPenRadius(this.getLevel() * 0.001);
+    StdDraw.line(this.getR().cartesian(0), this.getR().cartesian(1), posX, posY);*/
+   double radius = (this.getLevel() * 0.001 + 0.025) * 5.0e10;
+   double x = this.getR().cartesian(0) + Math.cos(rot) * radius;
+   double y = this.getR().cartesian(1) + Math.sin(rot) * radius;
+   StdDraw.setPenRadius(0.01);
+   StdDraw.setPenColor(StdDraw.RED);
+   StdDraw.point(x, y);
+    
+  }
+ 
  @Override 
  public Vector getLocation() {
    return this.getR();
- }
- 
- public Vector getFacing() {
-   return VectorUtil.direction(this.getR());
  }
  
  @Override

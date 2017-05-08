@@ -57,19 +57,17 @@ public class PlayerObject extends GameObject implements IViewPort {
    }
  }
  
-public int compare(GameObject o, GameObject g) {
-   double distO = this.getR().distanceTo(o.getR());
-   double distG = this.getR().distanceTo(g.getR());
-   if (distO > distG)
-     return 1;
-   if (distO == distG)
-     return 0;
-   return -1;
- }
-
- public Vector getFacing() {
-   return VectorUtil.direction(this.getR());
- }
+ @Override
+ public void draw() {
+   super.draw(); 
+   double radius = (this.getLevel() * 0.001 + 0.025) * 2.5e10;
+   double x = this.getR().cartesian(0) - Math.cos(rot) * radius;
+   double y = this.getR().cartesian(1) - Math.sin(rot) * radius;
+   StdDraw.setPenRadius(0.01);
+   StdDraw.setPenColor(StdDraw.RED);
+   StdDraw.point(x, y);
+    
+  }
  
  @Override 
  public Vector getLocation() {

@@ -2,7 +2,7 @@ import java.util.*;
 import java.awt.Color;
 import java.util.Random;
 
-public class GameObject /*implements Comparable<GameObject>*/ {
+public class GameObject {
   // Default implementation of a game object
   private Vector r;
   private Vector v;
@@ -86,6 +86,11 @@ public class GameObject /*implements Comparable<GameObject>*/ {
   *                                     *
   **************************************/  
   
+  public double sizeToDisplay(double dist, double sup) {
+    double result = ((this.getLevel() * 0.001 + 0.025 + sup) * 5.0e10) / (dist * 2);
+    return result;
+  }
+  
   public void clampSpeed() {
     double vX = this.v.cartesian(0);
     double vY = this.v.cartesian(1);
@@ -111,7 +116,7 @@ public class GameObject /*implements Comparable<GameObject>*/ {
       this.setV(new Vector(newV));
     }
   }
-    
+  
   public void move(Vector f, double dt) {
     Vector a = f.times(1/mass);
     this.v = this.v.plus(a.times(dt));
@@ -119,11 +124,11 @@ public class GameObject /*implements Comparable<GameObject>*/ {
   }
   
   public Vector forceFrom(GameObject that) {
-   double G = 6.67e-11;
-   Vector delta = that.r.minus(this.r);
-   double dist = delta.magnitude();
-   double F = (G * this.mass * that.mass) / (dist * dist);
-   return VectorUtil.direction(delta).times(F);
+    double G = 6.67e-11;
+    Vector delta = that.r.minus(this.r);
+    double dist = delta.magnitude();
+    double F = (G * this.mass * that.mass) / (dist * dist);
+    return VectorUtil.direction(delta).times(F);
   }
   
   public void draw() {
@@ -138,32 +143,16 @@ public class GameObject /*implements Comparable<GameObject>*/ {
     StdDraw.point(this.r.cartesian(0), this.r.cartesian(1));
   }
   
- public void draw(PlayerObject player) {
-   Vector dir = player.getFacing();
-   double posX = Math.cos(dir.cartesian(0)) * this.r.cartesian(0);
-   double posY = Math.sin(dir.cartesian(1)) * this.r.cartesian(0);
-   StdDraw.setPenColor(StdDraw.RED);
-   StdDraw.setPenRadius(player.getLevel() * 0.001);
-   //StdDraw.line(player.getR().cartesian(0), player.getR().cartesian(1), posX, posY);
+  public GameObject split() {
+    double[] newRDouble = {(this.getLevel() * 0.001 + 0.025) * 5.0e10, 0};
+    Vector newR = this.getR().plus(new Vector(newRDouble));
+    double[] newVDouble = {Math.abs(this.getV().cartesian(0)), this.getV().cartesian(1)};
+    Vector newV = new Vector(newVDouble);
+    GameObject newPlanet = new GameObject(newR, newV, this.getMass() / 1.5);
+    newPlanet.setLevel(this.getLevel() / 1.5);
+    
+    this.setV(newV.times(-1));
+    this.setTime((int)(Math.random() * 10000) + 10000);
+    return newPlanet;
   }
-  
- public GameObject split() {
-     double[] newRDouble = {(this.getLevel() * 0.001 + 0.025) * 5.0e10, 0};
-     Vector newR = this.getR().plus(new Vector(newRDouble));
-     double[] newVDouble = {Math.abs(this.getV().cartesian(0)), this.getV().cartesian(1)};
-     Vector newV = new Vector(newVDouble);
-     GameObject newPlanet = new GameObject(newR, newV, this.getMass() / 1.5);
-     newPlanet.setLevel(this.getLevel() / 1.5);
-     
-     this.setV(newV.times(-1));
-     this.setTime((int)(Math.random() * 10000) + 10000);
-     return newPlanet;
- }
- 
-// public int compareTo(GameObject o) {
-//   double a = this.num/this.den - b.num/b.den ;
-//   if (a > 0) return 1;
-//   if (a < 0) return -1;
-//   return 0;
-// }
 }

@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 // This class is inspired by the nbody slide
 
 public class GameState {
+  
   // Class representing the game state and implementing main game loop update step.
   private static int nbr = 0;
   private final PlayerObject player;
@@ -90,7 +91,7 @@ public class GameState {
           o.drawSup();
         o.draw();
     }
-    this.player.draw(this.player);
+    this.player.draw();
     cam.render(this.objects, this.player);
     cam.getDr().show(0);
   }
@@ -156,13 +157,13 @@ public class GameState {
   
   public void update(double delay) {
     // Main game loop update step
+    
     this.createPlanet();
     Map<GameObject, Vector> forces = calculateForces();
     for (GameObject o : forces.keySet()) {
       o.clampSpeed();
       o.move(forces.get(o), delay);
     }
-       
     Duration deltaTime = Duration.between(this.previousTime, Instant.now());
     this.previousTime = Instant.now();
     GameObject newObject = null;
@@ -173,11 +174,6 @@ public class GameState {
     }
     if (newObject != null)
       this.objects.add(newObject);
-    forces = null;
-//    if (StdDraw.isKeyPressed(KeyEvent.VK_P)) {
-//      StdDraw.save("capture/screenCaptureFirstView" + nbr + ".png");
-//      nbr++;
-//    }
     this.checkPosition();
     this.checkContact();
   }
