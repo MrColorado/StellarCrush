@@ -1,14 +1,16 @@
+import java.util.*;
 import java.awt.Color;
 import java.util.Random;
 
 public class GameObject /*implements Comparable<GameObject>*/ {
   // Default implementation of a game object
-  
-  private Color color;
+ 
   private Vector r;
-  private Vector v; 
-  private double mass;
-  private double level; 
+  private Vector v;
+  private double mass; 
+  private Color color;
+  private double level;
+  private long time;
   
   public GameObject(Vector r, Vector v, double mass) {
     int red = (int)(255 * Math.random());
@@ -19,21 +21,10 @@ public class GameObject /*implements Comparable<GameObject>*/ {
     this.v = v;
     this.mass = mass;
     Random rand = new Random();
-    this.level = rand.nextInt(6) + 4; 
+    this.level = rand.nextInt(6) + 4;
+    this.time = rand.nextInt(10000) + 10000;
   }
-  
-  public double getMass() {
-    return this.mass;
-  }
-  
-  public double getLevel() {
-    return this.level;
-  }
-  
-  public Color getColor() {
-    return this.color;
-  }
-  
+   
   public Vector getR () {
     return this.r;
   }
@@ -42,16 +33,40 @@ public class GameObject /*implements Comparable<GameObject>*/ {
     return this.v;
   }
   
+  public double getMass() {
+    return this.mass;
+  }
+  
+  public Color getColor() {
+    return this.color;
+  }
+  
+  public double getLevel() {
+    return this.level;
+  }
+  
+  public long getTime() {
+    return this.time;
+  }
+ 
   public void setR(Vector r) {
     this.r = r;
+  }
+  
+  public void setV(Vector v) {
+    this.v = v;
+  }
+   
+  public void setMass(double mass) {
+    this.mass = mass;
   }
   
   public void setLevel(double level) {
     this.level = level;
   }
-  
-  public void setMass(double mass) {
-    this.mass = mass;
+ 
+  public void setTime(long time) {
+    this.time = time;
   }
   
   public double sizeFromMass(double mass) {
@@ -91,11 +106,20 @@ public class GameObject /*implements Comparable<GameObject>*/ {
    //StdDraw.setPenRadius(this.getSize() / 10);
    StdDraw.line(this.r.cartesian(0), this.r.cartesian(1), posX, posY);
   }
- 
   
-  public double dist(Vector player) {
-    double result = Math.pow(player.cartesian(0) - this.r.cartesian(0), 2) + Math.pow(player.cartesian(1) - this.r.cartesian(1), 2);
-    result = Math.sqrt(result);
-    return result;
-  }
+ public GameObject split() {
+     double[] newRDouble = {(this.getLevel() * 0.001 + 0.025) *5.0e10, 0};
+     Vector newR = this.getR().plus(new Vector(newRDouble));
+     double[] newVDouble = {Math.abs(this.getV().cartesian(0)), this.getV().cartesian(1)};
+     Vector newV = new Vector(newVDouble);
+     GameObject newPlanet = new GameObject(newR, newV, this.getMass() / 2);
+     newPlanet.setLevel(this.getLevel() / 2);
+     
+     this.setMass(this.getMass() / 2);
+     this.setLevel(this.getLevel() / 2);
+     this.setV(newV.times(-1));
+     this.setTime((int)(Math.random() * 10000) + 10000);
+     
+     return newPlanet;
+ }
 }

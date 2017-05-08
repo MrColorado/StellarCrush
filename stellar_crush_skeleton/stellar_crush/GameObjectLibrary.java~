@@ -13,6 +13,12 @@ public class GameObjectLibrary {
   private static final double ASTEROID_MASS = 1E25;
   private static final double PLAYER_MASS = 1E25;
   
+  /**************************************
+  *                                     *
+  *             Constructor             *
+  *                                     *
+  **************************************/
+  
   public static PlayerObject createPlayer() {
     double[] velocity = {0.0, 0.0};
     Vector v = new Vector(velocity);
@@ -20,8 +26,14 @@ public class GameObjectLibrary {
     return player;
   }
   
+  /**************************************
+  *                                     *
+  *               Method                *
+  *                                     *
+  **************************************/
+  
   public static Collection<GameObject> createCollection() {
-    int n = 30;
+    int n = 1;
     double distance = 2.0 * Math.PI / (double)n;
     Random rand = new Random();
     StdDraw.setXscale(-5.0e10 , 5.0e10 );

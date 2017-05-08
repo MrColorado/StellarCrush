@@ -3,6 +3,12 @@ public class VectorUtil {
 
   public static final Vector TWO_D_ZERO = new Vector(new double[]{0, 0});
 
+  /**************************************
+  *                                     *
+  *               Method                *
+  *                                     *
+  **************************************/
+  
   static Vector rotate(double currentAngle, double angle) {
     double newAngle = currentAngle + angle;
     double[] data = {Math.cos(newAngle), Math.sin(newAngle)};

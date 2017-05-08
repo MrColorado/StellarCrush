@@ -13,6 +13,12 @@ public class Camera {
   private final int height = (int)scrnSize.getHeight();
   private final int width  = (int)scrnSize.getWidth();
 
+  /**************************************
+  *                                     *
+  *             Constructor             *
+  *                                     *
+  **************************************/
+  
   public Camera(IViewPort holder, double FOV) {
     // Constructs a camera with field of view FOV, held by holder, and rendered on canvas dr.
     this.holder = holder;
@@ -23,6 +29,12 @@ public class Camera {
     this.dr.setXscale(FOV/2.0, -FOV/2.0);
     this.dr.setYscale(-1.0, 1.0);
   }
+  
+  /**************************************
+  *                                     *
+  *           Getter/Setter             *
+  *                                     *
+  **************************************/
 
   public Draw getDr() {
     return this.dr;
@@ -32,7 +44,13 @@ public class Camera {
     return new Draw();
   }
   
-  void render(Collection<GameObject> objects) {
+  /**************************************
+  *                                     *
+  *               Method                *
+  *                                     *
+  **************************************/
+  
+  void render(Collection<GameObject> objects, PlayerObject player) {
     // Renders the collection from the camera perspective
     Vector pos = this.holder.getLocation();
     Vector dir = this.holder.getFacingVector();
@@ -42,8 +60,11 @@ public class Camera {
       double deltaX = pos.cartesian(0) - o.getR().cartesian(0);
       double deltaY = pos.cartesian(1) - o.getR().cartesian(1);
       double angle = Math.atan2(deltaY, deltaX) - Math.atan2(dir.cartesian(1), dir.cartesian(0));
-      if (Math.abs(angle) < FOV/2.0 && same)
+      if (Math.abs(angle) < FOV/2.0 && same) {
+        if (player.highlightLevel(o) == 1)
+          drawSup(o, angle);
         draw(o, angle);
+      }
     }
   }
   
@@ -51,6 +72,13 @@ public class Camera {
     this.dr.setLocationOnScreen(width / 2 + 1, 0);
     this.dr.setPenRadius(o.getLevel() * 0.01 + 0.025);
     this.dr.setPenColor(o.getColor());
+    this.dr.point(Math.sin(angle), 0);
+  }
+  
+  public void drawSup(GameObject o, double angle) {
+    this.dr.setLocationOnScreen(width / 2 + 1, 0);
+    this.dr.setPenRadius(o.getLevel() * 0.01 + 0.030);
+    this.dr.setPenColor(Draw.RED);
     this.dr.point(Math.sin(angle), 0);
   }
 }

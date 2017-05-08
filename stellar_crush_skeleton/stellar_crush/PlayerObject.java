@@ -11,11 +11,23 @@ public class PlayerObject extends GameObject implements IViewPort {
  private Camera cam;
  private double rot;
  
+ /**************************************
+  *                                     *
+  *             Constructor             *
+  *                                     *
+  **************************************/
+ 
  public PlayerObject(Vector r, Vector v, double mass) {
    super(r, v, mass);
    this.cam = new Camera(this, DEFAULT_FOV);
    this.rot = 0;
  }
+ 
+ /**************************************
+  *                                     *
+  *           Getter/Setter             *
+  *                                     *
+  **************************************/
  
  public double getRot() {
    return this.rot;
@@ -25,20 +37,38 @@ public class PlayerObject extends GameObject implements IViewPort {
    return this.cam;
  }
  
+ /**************************************
+  *                                     *
+  *               Method                *
+  *                                     *
+  **************************************/
+ 
  void processCommand(int delay) {
-   boolean up; 
-   boolean down;
    if (cam != null) {
      // No commands if no draw canvas to retrieve them from!
      if (this.cam.getDr().isKeyPressed(KeyEvent.VK_UP))
-       this.setR(this.getR().minus(this.getFacingVector().times(2e8)));
+       this.setR(this.getR().minus(this.getFacingVector().times(1e8)));
      if (this.cam.getDr().isKeyPressed(KeyEvent.VK_DOWN)) 
-       this.setR(this.getR().plus(this.getFacingVector().times(2e8)));
+       this.setR(this.getR().plus(this.getFacingVector().times(1e8)));
      if (this.cam.getDr().isKeyPressed(KeyEvent.VK_LEFT)) 
        this.rot += FOV_INCREMENT;
      if (this.cam.getDr().isKeyPressed(KeyEvent.VK_RIGHT)) 
        this.rot -= FOV_INCREMENT; 
    }
+ }
+ 
+public int compare(GameObject o, GameObject g) {
+   double distO = this.getR().distanceTo(o.getR());
+   double distG = this.getR().distanceTo(g.getR());
+   if (distO > distG)
+     return 1;
+   if (distO == distG)
+     return 0;
+   return -1;
+ }
+
+ public Vector getFacing() {
+   return VectorUtil.direction(this.getR());
  }
  
  @Override 
@@ -58,6 +88,8 @@ public class PlayerObject extends GameObject implements IViewPort {
  
  @Override 
  public double highlightLevel(GameObject o) {
-   return 0; 
+   if (this.getLevel() < o.getLevel())
+     return 1;
+   return 0;
  }
 }

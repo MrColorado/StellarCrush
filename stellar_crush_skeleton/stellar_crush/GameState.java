@@ -3,56 +3,95 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.time.Duration;
 import java.time.Instant;
-
+import java.util.Random;
+import java.awt.event.KeyEvent;
 
 // This class is inspired by the nbody slide
 
 public class GameState {
   // Class representing the game state and implementing main game loop update step.
-
+  private static int nbr = 0;
   private final PlayerObject player;
   private Collection<GameObject> objects;
   private Instant previousTime;
+  private double spawn;
+  
+  /**************************************
+  *                                     *
+  *             Constructor             *
+  *                                     *
+  **************************************/
   
   public GameState(PlayerObject player) {
     this.player = player;
     this.objects = GameObjectLibrary.createCollection();
     this.objects.add(this.player);
     this.previousTime = Instant.now();
+    this.spawn = Math.random() * 3000 + 2000;
   }
+  
+  /**************************************
+  *                                     *
+  *           Getter/Setter             *
+  *                                     *
+  **************************************/
   
   public Collection<GameObject> getObjects() {
     return this.objects;
   }
   
-  public void update(double delay) {
-    // Main game loop update step
-    Map<GameObject, Vector> forces = calculateForces();
+  /**************************************
+  *                                     *
+  *               Method                *
+  *                                     *
+  **************************************/
+  
+  public void createPlanet() {
     Duration deltaTime = Duration.between(this.previousTime, Instant.now());
-    this.previousTime = Instant.now();
-    for (GameObject o : forces.keySet()) {
-      o.move(forces.get(o), delay);
+    this.spawn -= deltaTime.toMillis();
+    if (this.spawn <= 0) {
+      Random rand = new Random();
+      int prob = rand.nextInt(4);
+      Vector r , v;
+      if (prob == 0) {
+        double[] newR = {-5e10, 5e10};
+        r = new Vector(newR);
+        double[] newV = {10000, -10000};
+        v = new Vector(newV);
+      }
+      else if (prob == 1) {
+        double[] newR = {5e10, 5e10};
+        r = new Vector(newR);
+        double[] newV = {-10000, -10000};
+        v = new Vector(newV);
+      }
+      else if (prob == 2) {
+        double[] newR = {5e10, -5e10};
+        r = new Vector(newR);
+        double[] newV = {-10000, 10000};
+        v = new Vector(newV);
+      }
+      else {
+        double[] newR = {-5e10, -5e10};
+        r = new Vector(newR);
+        double[] newV = {10000, 10000};
+        v = new Vector(newV);
+      }
+      GameObject o = new GameObject(r, v, 1E25);
+      this.objects.add(o);
+      this.spawn = Math.random() * 3000 + 2000;
     }
-    GameObject newObject = null;
-    for (GameObject o : this.objects) {
-      o.setTime(o.getTime() - deltaTime.toMillis());
-      if (o.getTime() <= 0 && o != player)
-        newObject = o.split(); 
-    }
-    if (newObject != null)
-      this.objects.add(newObject);
-    forces = null;
-    this.checkPosition();
-    this.checkContact();
   }
   
   public void draw(Camera cam) {
     for (GameObject o : this.objects) {
-      o.draw();
-      /*if (o == this.player) 
-        o.draw(this.player);*/
+      if (o != this.player)
+        if (this.player.highlightLevel(o) == 1)
+          o.drawSup();
+        o.draw();
     }
-    cam.render(this.objects);
+    this.player.draw(this.player);
+    cam.render(this.objects, this.player);
     cam.getDr().show(0);
   }
 
@@ -96,8 +135,16 @@ public class GameState {
     Collection<GameObject> data = new HashSet<GameObject>();
     for (GameObject o : this.objects) {
       for (GameObject g : this.objects) {
-        if (o != g && o.getR().distanceTo(g.getR()) / 5.0e10 < o.getLevel() * 0.001 + 0.025 && o.getLevel() > g.getLevel()) {          
+        if (o != g && o.getR().distanceTo(g.getR()) < 5e10 * (o.getLevel() * 0.0005 + 0.025) && o.getLevel() > g.getLevel()) {          
           data.add(g);
+          double massSum = g.getMass() + o.getMass();
+          double vx = g.getMass() * (g.getV().cartesian(0) - o.getV().cartesian(0)) + o.getMass() * o.getV().cartesian(0) + g.getMass() * g.getV().cartesian(0);
+          vx /= massSum;
+          double vy = g.getMass() * (g.getV().cartesian(1) - o.getV().cartesian(1)) + o.getMass() * o.getV().cartesian(1) + g.getMass() * g.getV().cartesian(1);
+          vy /= massSum;
+          double[] newV = {vx, vy};
+          Vector v = new Vector(newV);
+          o.setV(v);
           o.setLevel(o.getLevel() + g.getLevel());
           o.setMass(o.getMass() + g.getMass());
         }
@@ -105,5 +152,33 @@ public class GameState {
     }
     for(GameObject o : data) 
       this.objects.remove(o);
+  }
+  
+  public void update(double delay) {
+    // Main game loop update step
+    this.createPlanet();
+    Map<GameObject, Vector> forces = calculateForces();
+    for (GameObject o : forces.keySet()) {
+      o.clampSpeed();
+      o.move(forces.get(o), delay);
+    }
+       
+    Duration deltaTime = Duration.between(this.previousTime, Instant.now());
+    this.previousTime = Instant.now();
+    GameObject newObject = null;
+    for (GameObject o : this.objects) {
+      o.setTime(o.getTime() - deltaTime.toMillis());
+      if (o.getTime() <= 0 && o != player)
+        newObject = o.split(); 
+    }
+    if (newObject != null)
+      this.objects.add(newObject);
+    forces = null;
+//    if (StdDraw.isKeyPressed(KeyEvent.VK_P)) {
+//      StdDraw.save("capture/screenCaptureFirstView" + nbr + ".png");
+//      nbr++;
+//    }
+    this.checkPosition();
+    this.checkContact();
   }
 }

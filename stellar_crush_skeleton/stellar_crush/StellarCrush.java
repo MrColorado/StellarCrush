@@ -42,8 +42,15 @@ public class StellarCrush {
   static final double G = 6.67e-11; // gravitational constant
   static final double softE = 0.001; // softening factor to avoid division by zero calculating force for co-located objects
   static double scale = 5e10; // plotted universe size
+  static int nbr = 0;
   
-  public static boolean gameOver(PlayerObject player) {
+  /**************************************
+  *                                     *
+  *               Method                *
+  *                                     *
+  **************************************/
+  
+  public static void gameOver(PlayerObject player) {
     StdDraw.clear();
     StdDraw.setPenColor(StdDraw.RED);
     StdDraw.text(0.5, 0.5, "GAME OVER");
@@ -52,12 +59,12 @@ public class StellarCrush {
     player.getCam().getDr().setPenColor(StdDraw.RED);
     player.getCam().getDr().text(0, 0, "GAME OVER");
     player.getCam().getDr().show(1);
-    if (StdDraw.isKeyPressed(KeyEvent.VK_M))
-      return false;
-    return true;
+    while (true)
+      if (StdDraw.isKeyPressed(KeyEvent.VK_M) || player.getCam().getDr().isKeyPressed(KeyEvent.VK_M))
+        System.exit(0);
   }
   
-  public static boolean gameWin(PlayerObject player) {
+  public static void gameWin(PlayerObject player) {
     StdDraw.clear();
     StdDraw.setPenColor(StdDraw.RED);
     StdDraw.text(0.5, 0.5, "WIN");
@@ -66,9 +73,9 @@ public class StellarCrush {
     player.getCam().getDr().setPenColor(StdDraw.RED);
     player.getCam().getDr().text(0, 0, "WIN");
     player.getCam().getDr().show(1);
-    if (StdDraw.isKeyPressed(KeyEvent.VK_M))
-      return false;
-    return true;
+    while (true)
+      if (StdDraw.isKeyPressed(KeyEvent.VK_M) || player.getCam().getDr().isKeyPressed(KeyEvent.VK_M))
+        System.exit(0);
   }
   
   public static boolean startGame() {
@@ -85,14 +92,30 @@ public class StellarCrush {
         loose = true;
       if (game.getObjects().size() == 1)
         win = true;
+      if (StdDraw.isKeyPressed(KeyEvent.VK_P)) {
+        StdDraw.save("capture/thirdView/screenCapture" + nbr + ".png");
+        nbr++;
+      }
+      if (player.getCam().getDr().isKeyPressed(KeyEvent.VK_P)) {
+        player.getCam().getDr().save("capture/firstView/screenCapture" + nbr + ".png");
+        nbr++;
+      }
+      if (StdDraw.isKeyPressed(KeyEvent.VK_M) || player.getCam().getDr().isKeyPressed(KeyEvent.VK_M))
+        System.exit(0);
       StdDraw.show(1);
     }
     while (loose)
-      loose = gameOver(player);
+      gameOver(player);
     while (win)
-      win = gameWin(player);
+      gameWin(player);
     return false;
   }
+  
+  /**************************************
+  *                                     *
+  *                main                 *
+  *                                     *
+  **************************************/
   
   public static void main(String[] args) {
     // https://www.greenfoot.org/topics/1127
@@ -109,16 +132,14 @@ public class StellarCrush {
     StdDraw.text(0.5, 0.65, "Press any key to start");
     StdDraw.text(0.5, 0.45, "Arrows to rotate left or right, accelerate or decelerate");
     StdDraw.text(0.5, 0.35, "You are borg. Assimilate all who stand against you !");
-    StdDraw.text(0.5, 0.25, "Quit (m)");
+    StdDraw.text(0.5, 0.25, "Quit (m). Chose your view and make your screen capture (p)");
     
-    boolean b = true;
-    while (b) {
+    while (true) {
       if (StdDraw.isKeyPressed(KeyEvent.VK_M))
-        return;
+        System.exit(0);
       if (StdDraw.hasNextKeyTyped()) {
         startGame();
       }
     }
-    return;
   }
 }
