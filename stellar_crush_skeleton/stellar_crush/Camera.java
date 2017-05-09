@@ -32,7 +32,7 @@ public class Camera {
     this.FOV = FOV;
     this.dr = new Draw();
     this.dr.setLocationOnScreen(this.width / 2, 1);
-    this.dr.setCanvasSize(this.width / 2, (int)(height * 0.90));
+    this.dr.setCanvasSize(this.width / 2, (int)(height * 0.92));
     this.dr.setXscale(FOV/2.0, -FOV/2.0);
     this.dr.setYscale(-1.0, 1.0);
   }

@@ -102,6 +102,8 @@ public class StellarCrush {
         loose = true;
       if (game.getObjects().size() == 1)
         win = true;
+      if (StdDraw.isKeyPressed(KeyEvent.VK_F) || player.getCam().getDr().isKeyPressed(KeyEvent.VK_F))
+        game.setF(!game.getF());
       if (StdDraw.isKeyPressed(KeyEvent.VK_P)) {
         StdDraw.save("capture/thirdView/screenCapture" + nbr1 + ".png");
         nbr1++;
@@ -137,7 +139,7 @@ public class StellarCrush {
     int height = (int)scrnSize.getHeight();
     int width  = (int)scrnSize.getWidth();
     //
-    StdDraw.setCanvasSize(width / 2, (int)(height * 0.90));
+    StdDraw.setCanvasSize(width / 2, (int)(height * 0.92));
     StdDraw.setXscale(0, 1);
     StdDraw.setYscale(0, 1);
     StdDraw.clear();
@@ -151,7 +153,7 @@ public class StellarCrush {
     while (true) {
       if (StdDraw.isKeyPressed(KeyEvent.VK_M))
         System.exit(0);
-      if (StdDraw.hasNextKeyTyped()) {
+      if (!StdDraw.isKeyPressed(KeyEvent.VK_SPACE) && StdDraw.hasNextKeyTyped()) {
         startGame();
       }
     }

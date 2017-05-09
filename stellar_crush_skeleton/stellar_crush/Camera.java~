@@ -104,7 +104,7 @@ public class Camera {
   }
   
   /**
-  * Function with two parameters draw a GameObject on the Draw
+  * Function with two parameters which draw a GameObject on the Draw
   * @param o GameObject that will be draw
   * @param angle is the angle between the player and the GameObject o
   */
