@@ -60,15 +60,9 @@ public class PlayerObject extends GameObject implements IViewPort {
  @Override
  public void draw() {
    super.draw(); 
-   /*Vector dir = this.getFacingVector();
-    double posX = Math.cos(dir.cartesian(0)) * this.getR().cartesian(0);
-    double posY = Math.sin(dir.cartesian(1)) * this.getR().cartesian(0);
-    StdDraw.setPenColor(StdDraw.RED);
-    StdDraw.setPenRadius(this.getLevel() * 0.001);
-    StdDraw.line(this.getR().cartesian(0), this.getR().cartesian(1), posX, posY);*/
-   double radius = (this.getLevel() * 0.001 + 0.025) * 5.0e10;
-   double x = this.getR().cartesian(0) + Math.cos(rot) * radius;
-   double y = this.getR().cartesian(1) + Math.sin(rot) * radius;
+   double radius = (this.getLevel() * 0.001 + 0.025) * 2.5e10;
+   double x = this.getR().cartesian(0) - Math.cos(rot) * radius;
+   double y = this.getR().cartesian(1) - Math.sin(rot) * radius;
    StdDraw.setPenRadius(0.01);
    StdDraw.setPenColor(StdDraw.RED);
    StdDraw.point(x, y);

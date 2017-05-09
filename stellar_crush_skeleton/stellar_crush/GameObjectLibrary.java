@@ -18,7 +18,10 @@ public class GameObjectLibrary {
   *             Constructor             *
   *                                     *
   **************************************/
-  
+  /**
+  * Function wich create a new player
+  * @return a new player
+  */
   public static PlayerObject createPlayer() {
     double[] velocity = {0.0, 0.0};
     Vector v = new Vector(velocity);
@@ -32,6 +35,10 @@ public class GameObjectLibrary {
   *                                     *
   **************************************/
   
+  /**
+  * Function wich create a Collection of GameObject
+  * @return a Collection of GameObject
+  */
   public static Collection<GameObject> createCollection() {
     int n = 50;
     double distance = 2.0 * Math.PI / (double)n;
@@ -62,31 +69,10 @@ public class GameObjectLibrary {
     return data;
   }
   
-  public static Collection<GameObject> createCollectionFromFile () {
-    int N = StdIn.readInt();
-    double radius = StdIn.readDouble();
-    StdDraw.setXscale(-radius, +radius);
-    StdDraw.setYscale(-radius, +radius);
-    
-    // read in the N bodies
-    Collection<GameObject> data = new HashSet<GameObject>();
-    for (int i = 0; i < N; i++) {
-      double rx = StdIn.readDouble();
-      double ry = StdIn.readDouble();
-      double vx = StdIn.readDouble();
-      double vy = StdIn.readDouble();
-      double mass = StdIn.readDouble();
-      double[] position = { rx, ry };
-      double[] velocity = { vx, vy };
-      Vector r = new Vector(position);
-      Vector v = new Vector(velocity);
-      
-      GameObject newPlanet = new GameObject(r, v, mass);
-      data.add(newPlanet);
-    }
-    return data;
-  }
-  
+  /**
+  * Function with one parameter wich create a map from a GameObject Collection
+  * @return a map of GameObject
+  */
   public static Map<GameObject, Vector> createMap (Collection<GameObject> object) {
     Map<GameObject, Vector> map = new LinkedHashMap<GameObject, Vector>();
     for (GameObject o : object) { 

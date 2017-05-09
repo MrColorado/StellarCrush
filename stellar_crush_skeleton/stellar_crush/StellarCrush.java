@@ -37,12 +37,11 @@ public class StellarCrush {
   // Main game class
   
   // CONSTANTS TUNED FOR GAMEPLAY EXPERIENCE
-  static final int GAME_DELAY_TIME = 5000; // in-game time units between frame updates
-  static final int TIME_PER_MS = 1000; // how long in-game time corresponds to a real-time millisecond
-  static final double G = 6.67e-11; // gravitational constant
-  static final double softE = 0.001; // softening factor to avoid division by zero calculating force for co-located objects
-  static double scale = 5e10; // plotted universe size
-  static int nbr = 0;
+  private static final int GAME_DELAY_TIME = 5000; // in-game time units between frame updates
+  private static final double G = 6.67e-11; // gravitational constant
+  private static final double softE = 0.001; // softening factor to avoid division by zero calculating force for co-located objects
+  private static int nbr1 = 0;
+  private static int nbr2 = 0;
   
   /**************************************
   *                                     *
@@ -50,6 +49,10 @@ public class StellarCrush {
   *                                     *
   **************************************/
   
+  /**
+  * Function with one parameters which draw the GameOver message
+  * @param player it is the player 
+  */
   public static void gameOver(PlayerObject player) {
     StdDraw.clear();
     StdDraw.setPenColor(StdDraw.RED);
@@ -64,6 +67,10 @@ public class StellarCrush {
         System.exit(0);
   }
   
+  /**
+  * Function with one parameters which draw the GameWin message
+  * @param player it is the player 
+  */
   public static void gameWin(PlayerObject player) {
     StdDraw.clear();
     StdDraw.setPenColor(StdDraw.RED);
@@ -78,6 +85,9 @@ public class StellarCrush {
         System.exit(0);
   }
   
+  /**
+  * Function which start the game
+  */
   public static boolean startGame() {
     PlayerObject player = GameObjectLibrary.createPlayer();
     GameState game = new GameState(player);
@@ -85,7 +95,7 @@ public class StellarCrush {
     while (!win && !loose) {
       StdDraw.clear();
       player.getCam().getDr().clear();
-      player.processCommand(GAME_DELAY_TIME);
+      player.processCommand();
       game.update(GAME_DELAY_TIME);
       game.draw(player.getCam());
       if (!game.getObjects().contains(player))
@@ -93,12 +103,12 @@ public class StellarCrush {
       if (game.getObjects().size() == 1)
         win = true;
       if (StdDraw.isKeyPressed(KeyEvent.VK_P)) {
-        StdDraw.save("capture/thirdView/screenCapture" + nbr + ".png");
-        nbr++;
+        StdDraw.save("capture/thirdView/screenCapture" + nbr1 + ".png");
+        nbr1++;
       }
       if (player.getCam().getDr().isKeyPressed(KeyEvent.VK_P)) {
-        player.getCam().getDr().save("capture/firstView/screenCapture" + nbr + ".png");
-        nbr++;
+        player.getCam().getDr().save("capture/firstView/screenCapture" + nbr2 + ".png");
+        nbr2++;
       }
       if (StdDraw.isKeyPressed(KeyEvent.VK_M) || player.getCam().getDr().isKeyPressed(KeyEvent.VK_M))
         System.exit(0);
@@ -117,6 +127,10 @@ public class StellarCrush {
   *                                     *
   **************************************/
   
+  /**
+  * Function main function
+  * @param args this parameter is not use
+  */
   public static void main(String[] args) {
     // https://www.greenfoot.org/topics/1127
     Dimension scrnSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();

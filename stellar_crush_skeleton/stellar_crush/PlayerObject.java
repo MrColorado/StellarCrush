@@ -1,10 +1,7 @@
-import java.awt.Color;
 import java.awt.event.KeyEvent;
 
 public class PlayerObject extends GameObject implements IViewPort {
 
- private static final Color DEFAULT_COLOR = StdDraw.WHITE;
- private static final Color DEFAULT_FACING_COLOR = StdDraw.BLACK;
  private static final double DEFAULT_FOV = Math.PI/2; // field of view of player's viewport
  private static final double FOV_INCREMENT = Math.PI/36; // rotation speed
 
@@ -17,6 +14,12 @@ public class PlayerObject extends GameObject implements IViewPort {
   *                                     *
   **************************************/
  
+ /**
+  * Constructor with tree parameters
+  * @param r the location of the GameObject
+  * @param v the velocity of the GameObject
+  * @param mass the mass of the GameObject
+  */
  public PlayerObject(Vector r, Vector v, double mass) {
    super(r, v, mass);
    this.cam = new Camera(this, DEFAULT_FOV);
@@ -29,10 +32,18 @@ public class PlayerObject extends GameObject implements IViewPort {
   *                                     *
   **************************************/
  
+ /**
+  * Function which give the current rotation of the Player
+  * @return the current rotation of the player
+  */
  public double getRot() {
    return this.rot;
  }
  
+ /**
+  * Function which give the camera of the Player
+  * @return the camera of the player
+  */
  public Camera getCam() {
    return this.cam;
  }
@@ -43,20 +54,26 @@ public class PlayerObject extends GameObject implements IViewPort {
   *                                     *
   **************************************/
  
- void processCommand(int delay) {
+ /**
+  * Function with one parameter wich will set le location and velocity of the player
+  */
+ void processCommand() {
    if (cam != null) {
      // No commands if no draw canvas to retrieve them from!
-     if (this.cam.getDr().isKeyPressed(KeyEvent.VK_UP))
+     if (this.cam.getDr().isKeyPressed(KeyEvent.VK_UP) || StdDraw.isKeyPressed(KeyEvent.VK_UP))
        this.setR(this.getR().minus(this.getFacingVector().times(1e8)));
-     if (this.cam.getDr().isKeyPressed(KeyEvent.VK_DOWN)) 
+     if (this.cam.getDr().isKeyPressed(KeyEvent.VK_DOWN) || StdDraw.isKeyPressed(KeyEvent.VK_DOWN)) 
        this.setR(this.getR().plus(this.getFacingVector().times(1e8)));
-     if (this.cam.getDr().isKeyPressed(KeyEvent.VK_LEFT)) 
+     if (this.cam.getDr().isKeyPressed(KeyEvent.VK_LEFT) || StdDraw.isKeyPressed(KeyEvent.VK_LEFT)) 
        this.rot += FOV_INCREMENT;
-     if (this.cam.getDr().isKeyPressed(KeyEvent.VK_RIGHT)) 
+     if (this.cam.getDr().isKeyPressed(KeyEvent.VK_RIGHT) || StdDraw.isKeyPressed(KeyEvent.VK_RIGHT)) 
        this.rot -= FOV_INCREMENT; 
    }
  }
  
+ /**
+  * Function which draw the player on the stdDraw
+  */
  @Override
  public void draw() {
    super.draw(); 
@@ -66,14 +83,22 @@ public class PlayerObject extends GameObject implements IViewPort {
    StdDraw.setPenRadius(0.01);
    StdDraw.setPenColor(StdDraw.RED);
    StdDraw.point(x, y);
-    
-  }
+   
+ }
  
+ /**
+  * Function which give the location of the player
+  * @return the location of the player
+  */
  @Override 
  public Vector getLocation() {
    return this.getR();
  }
  
+ /**
+  * Function which give the facing vector of the GameOject
+  * @return the facing vector of the GameObject
+  */
  @Override
  public Vector getFacingVector() {
    double[] rotation = {Math.cos(this.rot), Math.sin(this.rot)};
@@ -84,6 +109,11 @@ public class PlayerObject extends GameObject implements IViewPort {
    return v;
  }
  
+ /**
+  * Function which indicates if a GameObject is bigger that the player
+  * @param o GameObject that is comparate to the player
+  * @return if a GameObject is bigger that the player
+  */
  @Override 
  public double highlightLevel(GameObject o) {
    if (this.getLevel() < o.getLevel())

@@ -21,6 +21,11 @@ public class Camera {
   *                                     *
   **************************************/
   
+  /**
+  * Constructor with two parameters
+  * @param holder the player
+  * @FOV is the fiel of view of the player
+  */  
   public Camera(IViewPort holder, double FOV) {
     // Constructs a camera with field of view FOV, held by holder, and rendered on canvas dr.
     this.holder = holder;
@@ -38,10 +43,18 @@ public class Camera {
   *                                     *
   **************************************/
 
+  /**
+  * Function with one parameter which give an acces to the Draw
+  * @return the Draw
+  */
   public Draw getDr() {
     return this.dr;
   }
   
+  /**
+  * Function with one parameter which create a new Draw
+  * @return a new Draw
+  */
   public Draw getDraw() {
     return new Draw();
   }
@@ -52,6 +65,11 @@ public class Camera {
   *                                     *
   **************************************/
   
+  /**
+  * Function with one parameter which create a tree from an object collection in the aim to sort elements which are in
+  * @param o first GameObject
+  * @return a tree were there are collecntion's object sort 
+  */
   public TreeSet<GameObject> createTreeSet(Collection<GameObject> objects) {
     Comparator<GameObject> comparator = new DistComparator(this.holder);
     TreeSet<GameObject> tree = new TreeSet<GameObject>(comparator);
@@ -61,6 +79,11 @@ public class Camera {
     return tree;
   }
   
+  /**
+  * Function with two parameters which display on the Draw, GameObject that are in the player's FOV
+  * @param objects all object that are in the universe
+  * @param player it is the player 
+  */
   void render(Collection<GameObject> objects, PlayerObject player) {
     // Renders the collection from the camera perspective
     Vector pos = this.holder.getLocation();
@@ -80,6 +103,11 @@ public class Camera {
     }
   }
   
+  /**
+  * Function with two parameters which draw a GameObject on the Draw
+  * @param o GameObject that will be draw
+  * @param angle is the angle between the player and the GameObject o
+  */
   public void draw(GameObject o, double angle) {
     double dist = this.holder.getLocation().distanceTo(o.getR());
     this.dr.setLocationOnScreen(width / 2 + 1, 0);
@@ -91,6 +119,11 @@ public class Camera {
     this.dr.point(Math.sin(angle), 0);
   }
   
+  /**
+  * Function with two parameters draw a red circle around the GameObject
+  * @param o GameObject that will be draw
+  * @param angle is the angle between the player and the GameObject o
+  */
   public void drawSup(GameObject o, double angle) {
     double dist = this.holder.getLocation().distanceTo(o.getR());
     this.dr.setLocationOnScreen(width / 2 + 1, 0);

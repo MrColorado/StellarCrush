@@ -1,4 +1,3 @@
-import java.util.*;
 import java.awt.Color;
 import java.util.Random;
 
@@ -86,6 +85,11 @@ public class GameObject {
   *                                     *
   **************************************/  
   
+  public double sizeToDisplay(double dist, double sup) {
+    double result = ((this.getLevel() * 0.001 + 0.025 + sup) * 5.0e10) / (dist * 2);
+    return result;
+  }
+  
   public void clampSpeed() {
     double vX = this.v.cartesian(0);
     double vY = this.v.cartesian(1);
@@ -137,15 +141,6 @@ public class GameObject {
     StdDraw.setPenColor(StdDraw.RED);
     StdDraw.point(this.r.cartesian(0), this.r.cartesian(1));
   }
-  
-//  public void draw(PlayerObject player) {
-//    Vector dir = player.getFacingVector();
-//    double posX = Math.cos(dir.cartesian(0)) * this.r.cartesian(0);
-//    double posY = Math.sin(dir.cartesian(1)) * this.r.cartesian(0);
-//    StdDraw.setPenColor(StdDraw.RED);
-//    StdDraw.setPenRadius(player.getLevel() * 0.001);
-//    StdDraw.line(player.getR().cartesian(0), player.getR().cartesian(1), posX, posY);
-//  }
   
   public GameObject split() {
     double[] newRDouble = {(this.getLevel() * 0.001 + 0.025) * 5.0e10, 0};

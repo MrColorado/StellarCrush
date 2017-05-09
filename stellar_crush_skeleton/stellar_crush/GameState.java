@@ -1,17 +1,14 @@
 import java.util.*;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Random;
-import java.awt.event.KeyEvent;
 
 // This class is inspired by the nbody slide
 
 public class GameState {
-  
   // Class representing the game state and implementing main game loop update step.
-  private static int nbr = 0;
+  
   private final PlayerObject player;
   private Collection<GameObject> objects;
   private Instant previousTime;
@@ -23,6 +20,10 @@ public class GameState {
   *                                     *
   **************************************/
   
+  /**
+  * Constructor with one parameter
+  * @param player it is the player of the game
+  */
   public GameState(PlayerObject player) {
     this.player = player;
     this.objects = GameObjectLibrary.createCollection();
@@ -37,6 +38,10 @@ public class GameState {
   *                                     *
   **************************************/
   
+  /**
+  * Function which give the Collection of the GameOject
+  * @return the Collection of the GameObject
+  */
   public Collection<GameObject> getObjects() {
     return this.objects;
   }
@@ -46,7 +51,9 @@ public class GameState {
   *               Method                *
   *                                     *
   **************************************/
-  
+  /**
+  * Function wich create a new GameObject from a corner
+  */
   public void createPlanet() {
     Duration deltaTime = Duration.between(this.previousTime, Instant.now());
     this.spawn -= deltaTime.toMillis();
@@ -84,6 +91,10 @@ public class GameState {
     }
   }
   
+  /**
+  * Function with one parameter wich which draw all GameObject
+  * @param cam it is the camera which is hold by the player 
+  */
   public void draw(Camera cam) {
     for (GameObject o : this.objects) {
       if (o != this.player)
@@ -96,6 +107,10 @@ public class GameState {
     cam.getDr().show(0);
   }
 
+  /**
+  * Function with one parameter wich compute the forces that will be applied on each GameObject
+  * @return a map which contain all GameObject and their associated forces
+  */
   private Map<GameObject, Vector> calculateForces() {
     Map<GameObject, Vector> map = GameObjectLibrary.createMap(this.objects);
     for (GameObject o : this.objects) {
@@ -109,6 +124,9 @@ public class GameState {
     return map;
   }
   
+  /**
+  * Function wich check if a GameObject is still in our universe
+  */
   public void checkPosition() {    
     for (GameObject o : this.objects) {
       double rx = o.getR().cartesian(0);
@@ -132,6 +150,9 @@ public class GameState {
     }
   }
   
+  /**
+  * Function wich check if a GameObject have a contact with another one
+  */
   public void checkContact() {
     Collection<GameObject> data = new HashSet<GameObject>();
     for (GameObject o : this.objects) {
@@ -155,6 +176,10 @@ public class GameState {
       this.objects.remove(o);
   }
   
+  /**
+  * Function with one parameter wich update the game
+  * @param delay is the day between to actualisation
+  */
   public void update(double delay) {
     // Main game loop update step
     
