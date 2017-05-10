@@ -1,5 +1,3 @@
-import java.util.*;
-
 public class Projectile extends GameObject {
   
   private double dmg;

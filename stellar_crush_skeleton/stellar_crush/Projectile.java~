@@ -1,32 +1,46 @@
+import java.util.*;
+
 public class Projectile extends GameObject {
   
   private double dmg;
-  private double level;
   
-  public Projectile(Vector r, Vector v, double mass, double level) {
+  /***************************************
+  *                                     *
+  *             Constructor             *
+  *                                     *
+  **************************************/
+  
+  /**
+  * Constructor with four parameters
+  * @param r the location of the GameObject
+  * @param v the velocity of the GameObject
+  * @param mass the mass of the GameObject
+  * @param dmg the dommage of the projectile
+  */
+  public Projectile(Vector r, Vector v, double mass, double dmg) {
     super(r, v, mass);
-    this.level = level;
-    this.dmg = this.level * 0.5;
+    this.dmg = dmg;
   }
   
-  public void attack(GameObject o, collection<GameObject>) {
-    o.setLife(o.getLife() - this.dmg);
-    if (o.getLife() <= 0) {
-      
-    }
+  /***************************************
+  *                                     *
+  *           Getter/Setter             *
+  *                                     *
+  **************************************/
+ 
+  /**
+  * Function which give the dmg of the projectile
+  * @return the dommage of the projectile
+  */
+  public double getDmg() {
+    return this.dmg;
+  }
+  
+  /**
+  * Function with one parameter which set the dommage of the projectile
+  * @param dmg is the dommage of the plqyer
+  */
+  public void setDmg(double dmg) {
+    this.dmg = dmg;
   }
 }
-
-
-//public GameObject split() {
-//    double[] newRDouble = {(this.getLevel() * 0.001 + 0.025) * 5.0e10, 0};
-//    Vector newR = this.getR().plus(new Vector(newRDouble));
-//    double[] newVDouble = {Math.abs(this.getV().cartesian(0)), this.getV().cartesian(1)};
-//    Vector newV = new Vector(newVDouble);
-//    GameObject newPlanet = new GameObject(newR, newV, this.getMass() / 1.5);
-//    newPlanet.setLevel(this.getLevel() / 1.5);
-//    
-//    this.setV(newV.times(-1));
-//    this.setTime((int)(Math.random() * 10000) + 10000);
-//    return newPlanet;
-//  }

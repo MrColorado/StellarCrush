@@ -38,8 +38,6 @@ public class StellarCrush {
   
   // CONSTANTS TUNED FOR GAMEPLAY EXPERIENCE
   private static final int GAME_DELAY_TIME = 5000; // in-game time units between frame updates
-  private static final double G = 6.67e-11; // gravitational constant
-  private static final double softE = 0.001; // softening factor to avoid division by zero calculating force for co-located objects
   private static int nbr1 = 0;
   private static int nbr2 = 0;
   
@@ -102,6 +100,8 @@ public class StellarCrush {
         loose = true;
       if (game.getObjects().size() == 1)
         win = true;
+      if (StdDraw.isKeyPressed(KeyEvent.VK_F) || player.getCam().getDr().isKeyPressed(KeyEvent.VK_F))
+        game.setF(!game.getF());
       if (StdDraw.isKeyPressed(KeyEvent.VK_P)) {
         StdDraw.save("capture/thirdView/screenCapture" + nbr1 + ".png");
         nbr1++;
@@ -151,7 +151,7 @@ public class StellarCrush {
     while (true) {
       if (StdDraw.isKeyPressed(KeyEvent.VK_M))
         System.exit(0);
-      if (StdDraw.hasNextKeyTyped()) {
+      if (!StdDraw.isKeyPressed(KeyEvent.VK_SPACE) && StdDraw.hasNextKeyTyped()) {
         startGame();
       }
     }

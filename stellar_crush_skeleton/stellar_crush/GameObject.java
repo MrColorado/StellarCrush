@@ -125,6 +125,14 @@ public class GameObject {
   }
   
   /**
+  * Function which set a new GameObject color
+  * @param mass is the new GameObject color
+  */
+  public void setColor(Color color) {
+    this.color = color;
+  }
+  
+  /**
   * Function which set a new GameObject level
   * @param level is the new GameObject level
   */
@@ -221,7 +229,7 @@ public class GameObject {
   * Function which draw GameObject on the stdDraw
   */
   public void draw() {
-    StdDraw.setPenRadius(this.level * 0.001 + 0.025);
+    StdDraw.setPenRadius(this.level * 0.0001 + 0.025);
     StdDraw.setPenColor(this.color);
     StdDraw.point(this.r.cartesian(0), this.r.cartesian(1));
   }
@@ -230,7 +238,7 @@ public class GameObject {
   * Function which draw red circle around the GameObject on the stdDraw if it is bigger than the player
   */
   public void drawSup() {
-    StdDraw.setPenRadius(this.level * 0.001 + 0.03);
+    StdDraw.setPenRadius(this.level * 0.0001 + 0.03);
     StdDraw.setPenColor(StdDraw.RED);
     StdDraw.point(this.r.cartesian(0), this.r.cartesian(1));
   }
@@ -240,7 +248,7 @@ public class GameObject {
   * @return the new GameObject
   */
   public GameObject split() {
-    double[] newRDouble = {(this.getLevel() * 0.001 + 0.025) * 5.0e10, 0};
+    double[] newRDouble = {(this.getLevel() * 0.0001 + 0.025) * 5.0e10, 0};
     Vector newR = this.getR().plus(new Vector(newRDouble));
     double[] newVDouble = {Math.abs(this.getV().cartesian(0)), this.getV().cartesian(1)};
     Vector newV = new Vector(newVDouble);
@@ -257,7 +265,7 @@ public class GameObject {
   * @return the new GameObject
   */
   public GameObject splitDestroy() {
-    double[] newRDouble = {(this.getLevel() * 0.001 + 0.025) * 5.0e10, 0};
+    double[] newRDouble = {(this.getLevel() * 0.0001 + 0.025) * 5.0e10, 0};
     Vector newR = this.getR().plus(new Vector(newRDouble));
     double[] newVDouble = {Math.abs(this.getV().cartesian(0)), this.getV().cartesian(1)};
     Vector newV = new Vector(newVDouble);

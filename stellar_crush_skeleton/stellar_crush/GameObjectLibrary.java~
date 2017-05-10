@@ -8,8 +8,6 @@ public class GameObjectLibrary {
 // for the game world.  Default assumption is objects face in the direction of their velocity, and are spherical.
   
   // UNIVERSE CONSTANTS - TUNED BY HAND FOR RANDOM GENERATION
-  private static final double ASTEROID_RADIUS = 0.5; // Location of asteroid belt for random initialization
-  private static final double ASTEROID_WIDTH = 0.2; // Width of asteroid belt
   private static final double ASTEROID_MASS = 1E25;
   private static final double PLAYER_MASS = 1E25;
   
@@ -40,7 +38,7 @@ public class GameObjectLibrary {
   * @return a Collection of GameObject
   */
   public static Collection<GameObject> createCollection() {
-    int n = 50;
+    int n = 1;
     double distance = 2.0 * Math.PI / (double)n;
     Random rand = new Random();
     StdDraw.setXscale(-5.0e10 , 5.0e10 );
@@ -65,6 +63,33 @@ public class GameObjectLibrary {
       Vector v = new Vector(velocity);
       GameObject newPlanet = new GameObject(r, v, mass);
       data.add(newPlanet);
+    }
+    return data;
+  }
+  
+  
+  /**
+  * Function wich create a Collection of GameObject
+  * @return a Collection of GameObject
+  */
+  public static Collection<GameObject> createTrap() {
+    int n = 1;
+    Collection<GameObject> data = new HashSet<GameObject>();
+    // read in the N bodies
+    for (int i = 0; i < n; i++) {
+      double rx = Math.random() * 1e5 + 1e2;
+      double ry = Math.random() * 1e5 + 1e2;
+      if (Math.random() > .5)
+        rx *= -1;
+      if (Math.random() > .5)
+        ry *= -1;
+      double mass = ASTEROID_MASS;
+      double[] position = { rx, ry };
+      Vector r = new Vector(position);
+      Vector v = new Vector(2);
+      GameObject trap = new GameObject(r, v, mass);
+      trap.setColor(StdDraw.BLACK);
+      data.add(trap);
     }
     return data;
   }

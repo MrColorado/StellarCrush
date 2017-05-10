@@ -1,3 +1,4 @@
+import java.util.*;
 import java.awt.event.KeyEvent;
 
 public class PlayerObject extends GameObject implements IViewPort {
@@ -7,8 +8,9 @@ public class PlayerObject extends GameObject implements IViewPort {
 
  private Camera cam;
  private double rot;
+ private static long delay = 2000;
  
- /**************************************
+ /***************************************
   *                                     *
   *             Constructor             *
   *                                     *
@@ -26,7 +28,7 @@ public class PlayerObject extends GameObject implements IViewPort {
    this.rot = 0;
  }
  
- /**************************************
+ /***************************************
   *                                     *
   *           Getter/Setter             *
   *                                     *
@@ -48,16 +50,47 @@ public class PlayerObject extends GameObject implements IViewPort {
    return this.cam;
  }
  
- /**************************************
+ /**
+  * Function which give the time before the next available projectile
+  * @return the delay of the player
+  */
+ public long getDelay() {
+   return this.delay;
+ }
+ 
+ /**
+  * Function with one parameter which set the time before the next available projectile
+  * @return the new delay of the player
+  */
+ public void setDelay(long delay) {
+   this.delay = delay;
+ }
+ 
+ /***************************************
   *                                     *
   *               Method                *
   *                                     *
   **************************************/
  
+ public void throwProjectile(Collection<GameObject> objects) {
+   double radius = (this.getLevel() * 0.001 + 0.025) * 5e10;
+   double x = this.getR().cartesian(0) - Math.cos(rot) * radius;
+   double y = this.getR().cartesian(1) - Math.sin(rot) * radius;   
+   
+   double[] newRDouble = {x, y};
+   Vector newR = new Vector(newRDouble);
+   double[] newVDouble = {-Math.cos(rot) * 1e5, -Math.sin(rot) * 1e5};
+   Vector newV = new Vector(newVDouble);
+   Projectile proj = new Projectile(newR, newV, 1E25, 1);
+   proj.setLevel(1);
+   proj.setMass(1e20);
+   objects.add(proj);
+ }
+ 
  /**
   * Function with one parameter wich will set le location and velocity of the player
   */
- void processCommand() {
+ public void processCommand() {
    if (cam != null) {
      // No commands if no draw canvas to retrieve them from!
      if (this.cam.getDr().isKeyPressed(KeyEvent.VK_UP) || StdDraw.isKeyPressed(KeyEvent.VK_UP))

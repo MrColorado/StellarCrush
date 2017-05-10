@@ -13,6 +13,7 @@ public class GameState {
   private boolean f = true;
   private final PlayerObject player;
   private Collection<GameObject> objects;
+  private Collection<GameObject> traps;
   private Instant previousTime;
   private double spawn;
   
@@ -29,6 +30,9 @@ public class GameState {
   public GameState(PlayerObject player) {
     this.player = player;
     this.objects = GameObjectLibrary.createCollection();
+    this.traps = GameObjectLibrary.createTrap();
+    for (GameObject o : this.traps)
+      this.objects.add(o);
     this.objects.add(this.player);
     this.previousTime = Instant.now();
     this.spawn = Math.random() * 3000 + 2000;
@@ -115,10 +119,13 @@ public class GameState {
   */
   public void draw(Camera cam) {
     for (GameObject o : this.objects) {
-      if (o != this.player)
+      if (o != this.player && !(o instanceof Trap)) {
         if (this.player.highlightLevel(o) == 1)
           o.drawSup();
-        o.draw();
+      }
+      if (o instanceof Trap)
+        o.drawSup();
+      o.draw();
     }
     this.player.draw();
     cam.render(this.objects, this.player);
@@ -177,14 +184,20 @@ public class GameState {
     Collection<GameObject> data = new HashSet<GameObject>();
     for (GameObject o : this.objects) {
       for (GameObject g : this.objects) {
-        if (o != g && o.getR().distanceTo(g.getR()) < 5e10 * (o.getLevel() * 0.0005 + 0.025) && o.getLevel() > g.getLevel()) {
+        if (o != g && o.getR().distanceTo(g.getR()) < 5e10 * (o.getLevel() * 0.00005 + 0.025)) {
           if (g instanceof Projectile && o != this.player) {
             projectileToDestroy.add(g);
             o.setLife(o.getLife() - 1);
-            if (o.getLife() <= 0)
-              destroy.add(o);
+            if (o.getLife() <= 0) {
+              if (o instanceof Trap)
+                data.add(o);
+              else 
+                destroy.add(o);
+            }
           }
-          else {
+          else if (g instanceof Trap)
+            data.add(o);
+          else if (o.getLevel() > g.getLevel()) { 
             data.add(g);
             double massSum = g.getMass() + o.getMass();
             double vx = g.getMass() * (g.getV().cartesian(0) - o.getV().cartesian(0)) + o.getMass() * o.getV().cartesian(0) + g.getMass() * g.getV().cartesian(0);
@@ -200,8 +213,9 @@ public class GameState {
         }
       }
     }
-    for(GameObject o : data) 
+    for(GameObject o : data) {
       this.objects.remove(o);
+    }
     for(GameObject o : destroy) 
       this.objects.add(o.splitDestroy());
     for(GameObject o : projectileToDestroy) 
@@ -229,8 +243,10 @@ public class GameState {
       StdDraw.text(.1, 0.9, "Forces on player : ON");
       Map<GameObject, Vector> forces = calculateForces();
       for (GameObject o : forces.keySet()) {
-        o.clampSpeed();
-        o.move(forces.get(o), delay);
+        if (!(o instanceof Trap)) {
+          o.clampSpeed();
+          o.move(forces.get(o), delay);
+        }
       }
     }
     else {
@@ -240,19 +256,22 @@ public class GameState {
       Map<GameObject, Vector> forces = calculateForces();
       this.objects.add(this.player);
       for (GameObject o : forces.keySet()) {
-        o.clampSpeed();
-        o.move(forces.get(o), delay);
+        if (!(o instanceof Trap)) {
+          o.clampSpeed();
+          o.move(forces.get(o), delay);
+        }
       }
     }
-    
+
     GameObject newObject = null;
     for (GameObject o : this.objects) {
       o.setTime(o.getTime() - deltaTime.toMillis());
-      if (o.getTime() <= 0 && o != player)
+      if (o.getTime() <= 0 && o != player && !(o instanceof Trap))
         newObject = o.split(); 
     }
     if (newObject != null)
       this.objects.add(newObject);
+    
     this.checkPosition();
     this.checkContact();
   }

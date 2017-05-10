@@ -38,8 +38,6 @@ public class StellarCrush {
   
   // CONSTANTS TUNED FOR GAMEPLAY EXPERIENCE
   private static final int GAME_DELAY_TIME = 5000; // in-game time units between frame updates
-  private static final double G = 6.67e-11; // gravitational constant
-  private static final double softE = 0.001; // softening factor to avoid division by zero calculating force for co-located objects
   private static int nbr1 = 0;
   private static int nbr2 = 0;
   
@@ -100,8 +98,12 @@ public class StellarCrush {
       game.draw(player.getCam());
       if (!game.getObjects().contains(player))
         loose = true;
-      if (game.getObjects().size() == 1)
-        win = true;
+      win = true;
+      for (GameObject o : game.getObjects()) {
+        if (!(o instanceof Trap) && !(o instanceof PlayerObject)) {
+          win = false;
+        }
+      }
       if (StdDraw.isKeyPressed(KeyEvent.VK_F) || player.getCam().getDr().isKeyPressed(KeyEvent.VK_F))
         game.setF(!game.getF());
       if (StdDraw.isKeyPressed(KeyEvent.VK_P)) {
@@ -148,7 +150,7 @@ public class StellarCrush {
     StdDraw.text(0.5, 0.65, "Press any key to start");
     StdDraw.text(0.5, 0.45, "Arrows to rotate left or right, accelerate or decelerate");
     StdDraw.text(0.5, 0.35, "You are borg. Assimilate all who stand against you !");
-    StdDraw.text(0.5, 0.25, "Quit (m). Chose your view and make your screen capture (p)");
+    StdDraw.text(0.5, 0.25, "Quit (m). Chose your view and make your screen capture (p). You can throw projectile to devide them (space)");
     
     while (true) {
       if (StdDraw.isKeyPressed(KeyEvent.VK_M))

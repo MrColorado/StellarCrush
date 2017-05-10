@@ -86,6 +86,7 @@ public class Camera {
   */
   void render(Collection<GameObject> objects, PlayerObject player) {
     // Renders the collection from the camera perspective
+    this.dr.setLocationOnScreen(width / 2 + 1, 0);
     Vector pos = this.holder.getLocation();
     Vector dir = this.holder.getFacingVector();
     TreeSet<GameObject> tree = createTreeSet(objects);

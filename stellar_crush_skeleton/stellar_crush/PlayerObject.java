@@ -8,7 +8,7 @@ public class PlayerObject extends GameObject implements IViewPort {
 
  private Camera cam;
  private double rot;
- private static long delay = 2000;
+ private long delay = 2000;
  
  /***************************************
   *                                     *
@@ -72,8 +72,12 @@ public class PlayerObject extends GameObject implements IViewPort {
   *                                     *
   **************************************/
  
+ /**
+  * Function with one parameter wich will throw a projectile from the player
+  * @param object the collection that contain all GameObject in the universe
+  */
  public void throwProjectile(Collection<GameObject> objects) {
-   double radius = (this.getLevel() * 0.001 + 0.025) * 5e10;
+   double radius = (this.getLevel() * 0.0001 + 0.025) * 5e10;
    double x = this.getR().cartesian(0) - Math.cos(rot) * radius;
    double y = this.getR().cartesian(1) - Math.sin(rot) * radius;   
    
@@ -88,7 +92,7 @@ public class PlayerObject extends GameObject implements IViewPort {
  }
  
  /**
-  * Function with one parameter wich will set le location and velocity of the player
+  * Function wich will modify location and the rotation of the player
   */
  public void processCommand() {
    if (cam != null) {
@@ -110,7 +114,7 @@ public class PlayerObject extends GameObject implements IViewPort {
  @Override
  public void draw() {
    super.draw(); 
-   double radius = (this.getLevel() * 0.001 + 0.025) * 2.5e10;
+   double radius = (this.getLevel() * 0.0001 + 0.025) * 2.5e10;
    double x = this.getR().cartesian(0) - Math.cos(rot) * radius;
    double y = this.getR().cartesian(1) - Math.sin(rot) * radius;
    StdDraw.setPenRadius(0.01);

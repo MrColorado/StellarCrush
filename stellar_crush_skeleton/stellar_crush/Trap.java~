@@ -1,0 +1,18 @@
+public class Trap extends GameObject {
+  
+  /***************************************
+  *                                     *
+  *             Constructor             *
+  *                                     *
+  **************************************/
+  
+  /**
+  * Constructor with four parameters
+  * @param r the location of the GameObject
+  * @param v the velocity of the GameObject
+  * @param mass the mass of the GameObject
+  */
+  public Trap(Vector r, Vector v, double mass) {
+    super(r, v, mass);
+  }
+}
