@@ -150,7 +150,8 @@ public class StellarCrush {
     StdDraw.text(0.5, 0.65, "Press any key to start");
     StdDraw.text(0.5, 0.45, "Arrows to rotate left or right, accelerate or decelerate");
     StdDraw.text(0.5, 0.35, "You are borg. Assimilate all who stand against you !");
-    StdDraw.text(0.5, 0.25, "Quit (m). Chose your view and make your screen capture (p). You can throw projectile to devide them (space)");
+    StdDraw.text(0.5, 0.25, "Quit (m). Chose your view and make your screen capture (p)");
+    StdDraw.text(0.5, 0.15, "You can substitute forces from and on the player (f). You can throw projectile to devide them (space)");
     
     while (true) {
       if (StdDraw.isKeyPressed(KeyEvent.VK_M))
